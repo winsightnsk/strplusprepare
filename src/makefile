@@ -14,7 +14,7 @@ drop: clean
 
 clean:
 	rm -rf $(FOLDERS)/*.c.*
-	rm -rf $(TEST_DIR)/$(FOLDERS)/*.*
+	rm -rf $(TEST_DIR)/$(FOLDERS)/test*.*
 
 math: drop
 	$(foreach file, $(wildcard $@/*.c), gcc $(CFLAGS) -c $(file) -o $(file).o;)
@@ -22,3 +22,6 @@ math: drop
 	gcc $(CFLAGS) -c $(TEST_DIR)/test_$@.c -o $(TEST_DIR)/$@/test_$@.o
 	gcc $(TEST_DIR)/$@/test_$@.o $@/*.o -o $(TEST_DIR)/$@/test_$@ $(LIBS)
 	$(TEST_DIR)/$@/test_$@
+	lcov --directory $(TEST_DIR)/$@ --capture -o $(TEST_DIR)/$@/coverage.info
+	genhtml --output-directory $(TEST_DIR)/$@/report --legend $(TEST_DIR)/$@/coverage.info
+	open $(TEST_DIR)/$@/report/index.html
