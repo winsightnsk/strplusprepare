@@ -5,4 +5,4 @@
 
 int subtract(int a, int b);
 
-#endif // MATH_FUNC_H
+#endif  // MATH_FUNC_H

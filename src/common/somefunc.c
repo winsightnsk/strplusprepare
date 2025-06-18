@@ -1,5 +1,3 @@
 #include "somefunc.h"
 
-int somefunc() {
-    return 1;
-}
+int somefunc() { return 1; }

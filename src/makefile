@@ -1,21 +1,24 @@
-CC = gcc
-CFLAGS = --coverage -Wall -Wextra -Werror
-LIBS = -lcheck -lsubunit -lm -lpthread -lgcov
-#
+CC=gcc
+CFLAGS=--coverage -Wall -Wextra -Werror
+LIBS=-lcheck -lsubunit -lm -lpthread -lgcov
+CLF=clang-format
 
-FOLDERS=math
+FOLDERS:=common math
 TEST_DIR=tests
 
-
-all: math
+clean:
+	$(foreach dir,$(FOLDERS),rm -rf $(dir)/*.c.*;)
+	$(foreach dir,$(FOLDERS),rm -rf $(TEST_DIR)/$(dir)/test*.*;)
 
 drop: clean
-	rm -Rf $(TEST_DIR)/$(FOLDERS)
+	$(foreach dir,$(FOLDERS),rm -Rf $(TEST_DIR)/$(dir);)
 
-clean:
-	rm -rf $(FOLDERS)/*.c.*
-	rm -rf common/*.c.*
-	rm -rf $(TEST_DIR)/$(FOLDERS)/test*.*
+clf:
+	$(eval CLF=clang-format-18)
+
+all: check math
+
+clang: clf all
 
 math: drop
 	$(foreach file, $(wildcard common/*.c), gcc $(CFLAGS) -c $(file) -o $(file).o;)
@@ -24,6 +27,25 @@ math: drop
 	gcc $(CFLAGS) -c $(TEST_DIR)/test_$@.c -o $(TEST_DIR)/$@/test_$@.o
 	gcc $(TEST_DIR)/$@/test_$@.o $@/*.o common/*.o -o $(TEST_DIR)/$@/test_$@ $(LIBS)
 	$(TEST_DIR)/$@/test_$@
+
+	$(foreach dir,$(FOLDERS),rm -rf $(dir)/*.c.*;)
+
 	lcov --directory $(TEST_DIR)/$@ --capture -o $(TEST_DIR)/$@/coverage.info
 	genhtml --output-directory $(TEST_DIR)/$@/report --legend $(TEST_DIR)/$@/coverage.info
 	open $(TEST_DIR)/$@/report/index.html
+
+check:
+	@echo ' '
+	@echo '--== Check for mistakes'
+	@if [ ! -f .clang-format ]; then \
+		cp ../../materials/linters/.clang-format .; \
+		echo '--   .clang-format copyed'; \
+	fi
+# $(foreach dir,$(FOLDERS),$(CLF) -i $(dir)/*.c; $(CLF) -i $(dir)/*.h;)
+	$(foreach dir,$(FOLDERS),$(CLF) -n $(dir)/*.c; $(CLF) -n $(dir)/*.h;)
+	@echo ' ';
+	cppcheck --enable=all --check-level=exhaustive --suppress=missingIncludeSystem */*.c
+	@echo ' ';
+	@echo '--   press enter...'
+	@read ans
+	# clear
