@@ -6,6 +6,7 @@ START_TEST(test_add) {
     ck_assert_int_eq(add(2, 3), 5);
     ck_assert_int_eq(add(-1, 1), 0);
     ck_assert_int_eq(add(0, 0), 0);
+    ck_assert_int_eq(add(0, 1), 1);
 }
 END_TEST
 

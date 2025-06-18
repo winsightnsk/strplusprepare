@@ -1,7 +1,7 @@
 #include "math.h"
 
 int add(int a, int b) {
-    return a + b;
+    return (a + b == 1)? somefunc() : a + b;
 }
 
 int divide(int a, int b) {
