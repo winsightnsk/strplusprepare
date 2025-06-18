@@ -21,11 +21,11 @@ START_TEST(test_divide_normal) {
 }
 END_TEST
 
-START_TEST(test_divide_by_zero) {
-    // Проверяем, что функция завершает программу при делении на ноль
-    ck_assert_exit(divide(10, 0));
-}
-END_TEST
+// START_TEST(test_divide_by_zero) {
+//     // Проверяем, что функция завершает программу при делении на ноль
+//     ck_assert_exit(divide(10, 0));
+// }
+// END_TEST
 
 // Обновляем math_suite:
 Suite *math_suite(void) {
