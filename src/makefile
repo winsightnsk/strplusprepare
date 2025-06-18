@@ -28,7 +28,8 @@ math: drop
 	gcc $(TEST_DIR)/$@/test_$@.o $@/*.o common/*.o -o $(TEST_DIR)/$@/test_$@ $(LIBS)
 	$(TEST_DIR)/$@/test_$@
 
-	$(foreach dir,$(FOLDERS),rm -rf $(dir)/*.c.*;)
+	rm -rf $@/*.c.*
+	rm -rf common/*.c.*
 
 	lcov --directory $(TEST_DIR)/$@ --capture -o $(TEST_DIR)/$@/coverage.info
 	genhtml --output-directory $(TEST_DIR)/$@/report --legend $(TEST_DIR)/$@/coverage.info
@@ -48,4 +49,4 @@ check:
 	@echo ' ';
 	@echo '--   press enter...'
 	@read ans
-	# clear
+	clear
