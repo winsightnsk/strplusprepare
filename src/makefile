@@ -4,7 +4,7 @@ LIBS = -lcheck -lsubunit -lm -lpthread -lgcov
 #
 
 FOLDERS=math
-TEST_DIR=../tests
+TEST_DIR=tests
 
 
 all: math

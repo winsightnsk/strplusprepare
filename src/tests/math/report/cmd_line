@@ -1,0 +1,1 @@
+genhtml --output-directory tests/math/report --legend tests/math/coverage.info
