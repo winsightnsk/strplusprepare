@@ -1,0 +1,1 @@
+genhtml --output-directory tests/result/report --legend tests/result/coverage.info

@@ -8,7 +8,6 @@ TEST_DIR=tests
 
 clean:
 	$(foreach dir,$(FOLDERS),rm -rf $(dir)/*.c.*;)
-	$(foreach dir,$(FOLDERS),rm -rf $(TEST_DIR)/$(dir)/test*.*;)
 
 drop: clean
 # $(foreach dir,$(FOLDERS),rm -Rf $(TEST_DIR)/$(dir);)
