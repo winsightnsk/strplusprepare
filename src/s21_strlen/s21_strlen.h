@@ -2,7 +2,8 @@
 #define S21_STRLEN_H
 
 #include <stdio.h>
+#include "../common/basetypes.h"
 
-size_t s21_strlen(const char *str);
+s21_size_t s21_strlen(const char *str);
 
 #endif
