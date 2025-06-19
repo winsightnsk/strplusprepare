@@ -53,3 +53,4 @@ dkms.conf
 *vscode/
 .clang-format
 *.c.gcno
+s21_strlen/main.c
