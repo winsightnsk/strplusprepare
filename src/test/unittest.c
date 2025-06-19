@@ -1,6 +1,6 @@
 #include <check.h>
 
-#include "../common/basetypes.h"
+#include "../s21_string.h"
 
 START_TEST(test_s21_null) {
   ck_assert_ptr_eq(s21_NULL, NULL);  // Проверяем, что s21_NULL == NULL
@@ -24,7 +24,7 @@ Suite *math_suite(void) {
   Suite *s;
   TCase *tc_core;  //, *tc_exit;
 
-  s = suite_create("Math");
+  s = suite_create("s21_string");
 
   /* Core test case */
   tc_core = tcase_create("Core");
