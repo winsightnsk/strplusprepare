@@ -1,26 +1,16 @@
 #include <check.h>
 
-#include "../math/math.h"
-#include "../math/math_func.h"
+#include "../common/basetypes.h"
 
-START_TEST(test_add) {
-  ck_assert_int_eq(add(2, 3), 5);
-  ck_assert_int_eq(add(-1, 1), 0);
-  ck_assert_int_eq(add(0, 0), 0);
-  ck_assert_int_eq(add(0, 1), 1);
+START_TEST(test_s21_null) {
+  ck_assert_ptr_eq(s21_NULL, NULL);  // Проверяем, что s21_NULL == NULL
+  int *ptr = s21_NULL;
+  ck_assert_ptr_null(ptr);  // Проверяем, что указатель действительно NULL
 }
 END_TEST
-
-START_TEST(test_subtract) {
-  ck_assert_int_eq(subtract(5, 3), 2);
-  ck_assert_int_eq(subtract(10, 20), -10);
-  ck_assert_int_eq(subtract(0, 0), 0);
-}
-END_TEST
-
-START_TEST(test_divide_normal) {
-  ck_assert_int_eq(divide(10, 2), 5);
-  ck_assert_int_eq(divide(9, 3), 3);
+START_TEST(test_s21_size_t) {
+  s21_size_t a = 1;
+  ck_assert_uint_eq(a, 1ULL);
 }
 END_TEST
 
@@ -30,7 +20,6 @@ END_TEST
 // }
 // END_TEST
 
-// Обновляем math_suite:
 Suite *math_suite(void) {
   Suite *s;
   TCase *tc_core;  //, *tc_exit;
@@ -39,9 +28,8 @@ Suite *math_suite(void) {
 
   /* Core test case */
   tc_core = tcase_create("Core");
-  tcase_add_test(tc_core, test_add);
-  tcase_add_test(tc_core, test_subtract);
-  tcase_add_test(tc_core, test_divide_normal);
+  tcase_add_test(tc_core, test_s21_null);
+  tcase_add_test(tc_core, test_s21_size_t);
   suite_add_tcase(s, tc_core);
 
   /* Exit test case */
