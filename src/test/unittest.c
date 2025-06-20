@@ -53,6 +53,7 @@ START_TEST(test_strncmp_single_char) {
   const char *str3 = "b";
   ck_assert_int_eq(s21_strncmp(str1, str2, 1), strncmp(str1, str2, 1));
   ck_assert_int_eq(s21_strncmp(str1, str3, 1), strncmp(str1, str3, 1));
+  ck_assert_int_eq(s21_strncmp(str3, str1, 1), strncmp(str3, str1, 1));
 }
 END_TEST
 START_TEST(test_strncmp_different) {
@@ -61,6 +62,17 @@ START_TEST(test_strncmp_different) {
   for (size_t i = 0; i < strlen(str2 + 1); i++)
     ck_assert_int_eq(s21_strncmp(str1, str2, i), strncmp(str1, str2, i));
 }
+
+// ================================ STR_MEM_CHR ==========================
+START_TEST(test_memchr_instr) {
+  const char *str = "Hello, world!";
+  for (size_t i = 0; i < strlen(str); i++) {
+    int c = str[i];
+    ck_assert_ptr_eq(s21_memchr(str, c, strlen(str)),
+                     memchr(str, c, strlen(str)));
+  }
+}
+END_TEST
 
 Suite *math_suite(void) {
   Suite *s;
@@ -80,6 +92,9 @@ Suite *math_suite(void) {
   tcase_add_test(tc_core, test_strncmp_empty);
   tcase_add_test(tc_core, test_strncmp_single_char);
   tcase_add_test(tc_core, test_strncmp_different);
+  // ================================ STR_MEM_CHR ==========================
+  tcase_add_test(tc_core, test_memchr_instr);
+  // =======================================================================
   suite_add_tcase(s, tc_core);
 
   return s;

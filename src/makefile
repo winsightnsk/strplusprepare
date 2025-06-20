@@ -3,7 +3,7 @@ CFLAGS=--coverage -Wall -Wextra -Werror
 LIBS=-lcheck -lsubunit -lm -lpthread -lgcov
 CLF=clang-format
 
-FOLDERS:=. common s21_strlen s21_strncmp
+FOLDERS:=. common s21_strlen s21_strncmp s21_memchr
 TEST_DIR=test
 
 clean:
@@ -37,7 +37,7 @@ check:
 	clear
 
 test: clean
-	$(CLF) -i test/*.c
+# $(CLF) -i test/*.c
 	$(foreach fldr,$(FOLDERS),$(foreach file, $(wildcard $(fldr)/*.c), gcc $(CFLAGS) -c $(file) -o $(file).o;))
 	$(foreach file, $(wildcard $(TEST_DIR)/*.c), gcc $(CFLAGS) -c $(file) -o $(file).o;)
 	@if [ ! -d "$(TEST_DIR)/result" ]; then mkdir $(TEST_DIR)/result; fi
