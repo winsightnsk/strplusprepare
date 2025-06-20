@@ -55,3 +55,4 @@ dkms.conf
 *.c.gcno
 src/s21_strlen/main.c
 src/s21_strncmp/main.c
+.gitignore

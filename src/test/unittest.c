@@ -4,7 +4,7 @@
 
 #include "../s21_string.h"
 
-// ================================ BASETYPES ==============================
+// ================================ BASETYPES ============================
 START_TEST(test_s21_null) {
   ck_assert_ptr_eq(s21_NULL, NULL);  // Проверяем, что s21_NULL == NULL
   int *ptr = s21_NULL;
@@ -40,6 +40,28 @@ START_TEST(test_strlen_hundredsixty) {
 }
 END_TEST
 
+// ================================ STR_N_CMP ============================
+START_TEST(test_strncmp_empty) {
+  const char *str1 = "";
+  const char *str2 = "";
+  ck_assert_int_eq(s21_strncmp(str1, str2, 1), strncmp(str1, str2, 1));
+}
+END_TEST
+START_TEST(test_strncmp_single_char) {
+  const char *str1 = "a";
+  const char *str2 = "a";
+  const char *str3 = "b";
+  ck_assert_int_eq(s21_strncmp(str1, str2, 1), strncmp(str1, str2, 1));
+  ck_assert_int_eq(s21_strncmp(str1, str3, 1), strncmp(str1, str3, 1));
+}
+END_TEST
+START_TEST(test_strncmp_different) {
+  char *str1 = "Hello";
+  char *str2 = "Hello, World!";
+  for (size_t i = 0; i < strlen(str2 + 1); i++)
+    ck_assert_int_eq(s21_strncmp(str1, str2, i), strncmp(str1, str2, i));
+}
+
 Suite *math_suite(void) {
   Suite *s;
   TCase *tc_core;
@@ -47,13 +69,17 @@ Suite *math_suite(void) {
   s = suite_create("s21_string");
 
   tc_core = tcase_create("Core");
-  // ================================ BASETYPES ==============================
+  // ================================ BASETYPES ============================
   tcase_add_test(tc_core, test_s21_null);
   tcase_add_test(tc_core, test_s21_size_t);
   // ================================ STR_LEN ==============================
   tcase_add_test(tc_core, test_strlen_empty);
   tcase_add_test(tc_core, test_strlen_single_char);
   tcase_add_test(tc_core, test_strlen_hundredsixty);
+  // ================================ STR_N_CMP ============================
+  tcase_add_test(tc_core, test_strncmp_empty);
+  tcase_add_test(tc_core, test_strncmp_single_char);
+  tcase_add_test(tc_core, test_strncmp_different);
   suite_add_tcase(s, tc_core);
 
   return s;
