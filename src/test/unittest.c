@@ -67,10 +67,30 @@ START_TEST(test_strncmp_different) {
 START_TEST(test_memchr_instr) {
   const char *str = "Hello, world!";
   for (size_t i = 0; i < strlen(str); i++) {
-    int c = str[i];
-    ck_assert_ptr_eq(s21_memchr(str, c, strlen(str)),
-                     memchr(str, c, strlen(str)));
+    ck_assert_ptr_eq(s21_memchr(str, (int)str[i], strlen(str)),
+                     memchr(str, (int)str[i], strlen(str)));
   }
+}
+END_TEST
+START_TEST(test_memchr_nochrinstr) {
+  const char *str = "Hello, world!";
+  ck_assert_ptr_eq(s21_memchr(str, 'z', strlen(str)),
+                   memchr(str, 'z', strlen(str)));
+  ck_assert_ptr_eq(s21_memchr(str, 'd', 5), memchr(str, 'd', 5));
+}
+END_TEST
+START_TEST(test_memchr_nol) {
+  const char *str = "Hello, world!";
+  int c = '\0';
+  ck_assert_ptr_eq(s21_memchr(str, c, strlen(str) + 1),
+                   memchr(str, c, strlen(str) + 1));
+}
+END_TEST
+START_TEST(test_memchr_bin) {
+  const unsigned char data[] = {0x01, 0x02, 0x03, 0x04, 0x05};
+  int c = 0x03;
+  ck_assert_ptr_eq(s21_memchr(data, c, sizeof(data)),
+                   memchr(data, c, sizeof(data)));
 }
 END_TEST
 
@@ -94,6 +114,9 @@ Suite *math_suite(void) {
   tcase_add_test(tc_core, test_strncmp_different);
   // ================================ STR_MEM_CHR ==========================
   tcase_add_test(tc_core, test_memchr_instr);
+  tcase_add_test(tc_core, test_memchr_nochrinstr);
+  tcase_add_test(tc_core, test_memchr_nol);
+  tcase_add_test(tc_core, test_memchr_bin);
   // =======================================================================
   suite_add_tcase(s, tc_core);
 
