@@ -57,8 +57,8 @@ START_TEST(test_strncmp_single_char) {
 }
 END_TEST
 START_TEST(test_strncmp_different) {
-  char *str1 = "Hello";
-  char *str2 = "Hello, World!";
+  const char *str1 = "Hello";
+  const char *str2 = "Hello, World!";
   for (size_t i = 0; i < strlen(str2 + 1); i++)
     ck_assert_int_eq(s21_strncmp(str1, str2, i), strncmp(str1, str2, i));
 }
