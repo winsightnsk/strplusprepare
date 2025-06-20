@@ -3,7 +3,7 @@ CFLAGS=--coverage -Wall -Wextra -Werror
 LIBS=-lcheck -lsubunit -lm -lpthread -lgcov
 CLF=clang-format
 
-FOLDERS:=. common
+FOLDERS:=. common s21_strlen s21_strncmp
 TEST_DIR=test
 
 clean:
@@ -27,10 +27,8 @@ check:
 		echo '--   .clang-format copyed'; \
 	fi
 
-	clang-format-18 -i */*.c
-	clang-format-18 -i */*.h
-	clang-format-18 -n */*.c
-	clang-format-18 -n */*.h
+	$(CLF) -n */*.c
+	$(CLF) -n */*.h
 	@echo ' ';
 	cppcheck --enable=all --check-level=exhaustive --suppress=missingIncludeSystem */*.c
 	@echo ' ';
@@ -39,6 +37,7 @@ check:
 	clear
 
 test: clean
+	$(CLF) -i test/*.c
 	$(foreach fldr,$(FOLDERS),$(foreach file, $(wildcard $(fldr)/*.c), gcc $(CFLAGS) -c $(file) -o $(file).o;))
 	$(foreach file, $(wildcard $(TEST_DIR)/*.c), gcc $(CFLAGS) -c $(file) -o $(file).o;)
 	@if [ ! -d "$(TEST_DIR)/result" ]; then mkdir $(TEST_DIR)/result; fi

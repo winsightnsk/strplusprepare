@@ -1,4 +1,6 @@
 #include <check.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "../s21_string.h"
 
@@ -15,6 +17,29 @@ START_TEST(test_s21_size_t) {
 }
 END_TEST
 
+// ================================ STR_LEN ==============================
+START_TEST(test_strlen_empty) {
+  const char *str = "";
+  ck_assert_uint_eq(s21_strlen(str), strlen(str));
+}
+END_TEST
+START_TEST(test_strlen_single_char) {
+  const char *str = "a";
+  ck_assert_uint_eq(s21_strlen(str), strlen(str));
+}
+END_TEST
+START_TEST(test_strlen_hundredsixty) {
+  char *str = malloc(161);
+  char *pnt = str;
+  for (int i = 160; i >= 0; i--) {
+    *pnt = (char)i;
+    pnt++;
+  }
+  ck_assert_uint_eq(s21_strlen(str), strlen(str));
+  free(str);
+}
+END_TEST
+
 Suite *math_suite(void) {
   Suite *s;
   TCase *tc_core;
@@ -22,8 +47,13 @@ Suite *math_suite(void) {
   s = suite_create("s21_string");
 
   tc_core = tcase_create("Core");
+  // ================================ BASETYPES ==============================
   tcase_add_test(tc_core, test_s21_null);
   tcase_add_test(tc_core, test_s21_size_t);
+  // ================================ STR_LEN ==============================
+  tcase_add_test(tc_core, test_strlen_empty);
+  tcase_add_test(tc_core, test_strlen_single_char);
+  tcase_add_test(tc_core, test_strlen_hundredsixty);
   suite_add_tcase(s, tc_core);
 
   return s;
