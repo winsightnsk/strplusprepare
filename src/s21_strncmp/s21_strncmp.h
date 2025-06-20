@@ -2,7 +2,6 @@
 #define S21_STRNCMP_H
 
 #include <stdio.h>
-#include <string.h>
 
 #include "../common/basetypes.h"
 
