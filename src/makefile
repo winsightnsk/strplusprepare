@@ -4,6 +4,7 @@ LIBS=-lcheck -lsubunit -lm -lpthread -lgcov
 CLF=clang-format
 
 FOLDERS:=. common s21_strlen s21_strncmp s21_memchr
+OBJECTS=$(foreach fldr,$(FOLDERS),$(foreach file, $(wildcard $(fldr)/*.c), $(file).o))
 TEST_DIR=test
 
 all: check test
@@ -37,7 +38,6 @@ check:
 	clear
 
 test: clean
-	# $(CLF) -i test/*.c
 	$(foreach fldr,$(FOLDERS),$(foreach file, $(wildcard $(fldr)/*.c), gcc $(CFLAGS) -c $(file) -o $(file).o;))
 	$(foreach file, $(wildcard $(TEST_DIR)/*.c), gcc $(CFLAGS) -c $(file) -o $(file).o;)
 	@if [ ! -d "$(TEST_DIR)/result" ]; then mkdir $(TEST_DIR)/result; fi
@@ -49,4 +49,10 @@ gcov_report:
 	genhtml --output-directory $(TEST_DIR)/result/report --legend $(TEST_DIR)/result/coverage.info
 # open $(TEST_DIR)/result/report/index.html
 
-# s21_string.a:
+s21_string.a: $(OBJECTS)
+	rm -f $@
+	ar rcs $@ $^
+	rm -rf $^
+
+$(OBJECTS): %.c.o: %.c
+	$(CC) -Wall -Wextra -Werror -c $^ -o $@
