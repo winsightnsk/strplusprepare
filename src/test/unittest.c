@@ -12,8 +12,8 @@ START_TEST(test_s21_null) {
 }
 END_TEST
 START_TEST(test_s21_size_t) {
-  s21_size_t a = 1;
-  ck_assert_uint_eq(a, 1ULL);
+  const s21_size_t a = 1;
+  ck_assert_uint_eq(a, 1UL);
 }
 END_TEST
 
@@ -88,7 +88,7 @@ START_TEST(test_memchr_nol) {
 END_TEST
 START_TEST(test_memchr_bin) {
   const unsigned char data[] = {200, 100, 0, 150, 8, 185, 160};
-  for (long unsigned int i = 0; i < sizeof(data); i++) {
+  for (unsigned long i = 0; i < sizeof(data); i++) {
     ck_assert_ptr_eq(s21_memchr(data, data[i], sizeof(data)),
                      memchr(data, data[i], sizeof(data)));
   }
