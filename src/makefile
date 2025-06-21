@@ -14,6 +14,7 @@ clean:
 	rm -rf $(TEST_DIR)/*.c.*
 	rm -Rf $(TEST_DIR)/result
 	rm -f $(TEST_DIR)/$(TEST_DIR)
+	rm -f *.a
 
 clf:
 	$(eval CLF=clang-format-18)
