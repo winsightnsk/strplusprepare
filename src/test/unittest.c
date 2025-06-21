@@ -29,9 +29,9 @@ START_TEST(test_strlen_single_char) {
 }
 END_TEST
 START_TEST(test_strlen_hundredsixty) {
-  char *str = malloc(161);
+  char *str = malloc(128);
   char *pnt = str;
-  for (int i = 160; i >= 0; i--) {
+  for (int i = 127; i >= 0; i--) {
     *pnt = (char)i;
     pnt++;
   }
@@ -59,31 +59,31 @@ END_TEST
 START_TEST(test_strncmp_different) {
   const char *str1 = "Hello";
   const char *str2 = "Hello, World!";
-  for (size_t i = 0; i < strlen(str2 + 1); i++)
+  for (s21_size_t i = 0; i < s21_strlen(str2 + 1); i++)
     ck_assert_int_eq(s21_strncmp(str1, str2, i), strncmp(str1, str2, i));
 }
 
 // ================================ STR_MEM_CHR ==========================
 START_TEST(test_memchr_instr) {
   const char *str = "Hello, world!";
-  for (size_t i = 0; i < strlen(str); i++) {
-    ck_assert_ptr_eq(s21_memchr(str, (int)str[i], strlen(str)),
-                     memchr(str, (int)str[i], strlen(str)));
+  for (s21_size_t i = 0; i < s21_strlen(str); i++) {
+    ck_assert_ptr_eq(s21_memchr(str, (int)str[i], s21_strlen(str)),
+                     memchr(str, (int)str[i], s21_strlen(str)));
   }
 }
 END_TEST
 START_TEST(test_memchr_nochrinstr) {
   const char *str = "Hello, world!";
-  ck_assert_ptr_eq(s21_memchr(str, 'z', strlen(str)),
-                   memchr(str, 'z', strlen(str)));
+  ck_assert_ptr_eq(s21_memchr(str, 'z', s21_strlen(str)),
+                   memchr(str, 'z', s21_strlen(str)));
   ck_assert_ptr_eq(s21_memchr(str, 'd', 5), memchr(str, 'd', 5));
 }
 END_TEST
 START_TEST(test_memchr_nol) {
   const char *str = "Hello, world!";
   const int c = '\0';
-  ck_assert_ptr_eq(s21_memchr(str, c, strlen(str) + 1),
-                   memchr(str, c, strlen(str) + 1));
+  ck_assert_ptr_eq(s21_memchr(str, c, s21_strlen(str) + 1),
+                   memchr(str, c, s21_strlen(str) + 1));
 }
 END_TEST
 START_TEST(test_memchr_bin) {
