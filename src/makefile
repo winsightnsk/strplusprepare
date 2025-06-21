@@ -6,6 +6,8 @@ CLF=clang-format
 FOLDERS:=. common s21_strlen s21_strncmp s21_memchr
 TEST_DIR=test
 
+all: check test
+
 clean:
 	$(foreach dir,$(FOLDERS),rm -rf $(dir)/*.c.*;)
 	rm -rf $(TEST_DIR)/*.c.*
@@ -14,8 +16,6 @@ clean:
 
 clf:
 	$(eval CLF=clang-format-18)
-
-all: check test
 
 clang: clf all
 
