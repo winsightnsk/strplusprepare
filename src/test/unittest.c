@@ -81,16 +81,17 @@ START_TEST(test_memchr_nochrinstr) {
 END_TEST
 START_TEST(test_memchr_nol) {
   const char *str = "Hello, world!";
-  int c = '\0';
+  const int c = '\0';
   ck_assert_ptr_eq(s21_memchr(str, c, strlen(str) + 1),
                    memchr(str, c, strlen(str) + 1));
 }
 END_TEST
 START_TEST(test_memchr_bin) {
-  const unsigned char data[] = {0x01, 0x02, 0x03, 0x04, 0x05};
-  int c = 0x03;
-  ck_assert_ptr_eq(s21_memchr(data, c, sizeof(data)),
-                   memchr(data, c, sizeof(data)));
+  const unsigned char data[] = {200, 100, 0, 150, 8, 185, 160};
+  for (long unsigned int i = 0; i < sizeof(data); i++) {
+    ck_assert_ptr_eq(s21_memchr(data, data[i], sizeof(data)),
+                     memchr(data, data[i], sizeof(data)));
+  }
 }
 END_TEST
 
