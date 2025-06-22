@@ -3,7 +3,7 @@ CFLAGS=--coverage -Wall -Wextra -Werror
 LIBS=-lcheck -lsubunit -lm -lpthread -lgcov
 CLF=clang-format
 
-FOLDERS:=. common s21_strlen s21_strncmp s21_memchr
+FOLDERS:=. common s21_strlen s21_strncmp s21_memchr s21_strncpy
 OBJECTS=$(foreach fldr,$(FOLDERS),$(foreach file, $(wildcard $(fldr)/*.c), $(file).o))
 TEST_DIR=test
 
