@@ -1,8 +1,28 @@
 #include <check.h>
-#include <stdlib.h>
 #include <string.h>
 
 #include "../s21_string.h"
+
+// Свой асерт для проверки частичного раверства строк
+void assert_strn_eq(char *dest, char *src, s21_size_t count) {
+  for (s21_size_t i = 0; i < count; i++, dest++, src++)
+    ck_assert_int_eq(*dest, *src);
+}
+
+// Функция для заполнения строки из символов ASCII от 127 до 0
+void feelString(char *str) {
+  char *pnt = str;
+  for (int i = 127; i >= 0; i--) {
+    *pnt = (char)i;
+    pnt++;
+  }
+}
+
+// Заполняет count ячеек символом character и добавляет \0
+void feelCharString(char *str, char character, s21_size_t count) {
+  memset(str, character, count);
+  *(str + count) = '\0';
+}
 
 // ================================ BASETYPES ============================
 START_TEST(test_s21_null) {
@@ -29,14 +49,10 @@ START_TEST(test_strlen_single_char) {
 }
 END_TEST
 START_TEST(test_strlen_hundredsixty) {
-  char *str = malloc(128);
-  char *pnt = str;
-  for (int i = 127; i >= 0; i--) {
-    *pnt = (char)i;
-    pnt++;
-  }
+  char str[128];
+  feelString(str);
   ck_assert_uint_eq(s21_strlen(str), strlen(str));
-  free(str);
+  // free(str);
 }
 END_TEST
 
@@ -93,7 +109,44 @@ START_TEST(test_memchr_bin) {
                      memchr(data, data[i], sizeof(data)));
   }
 }
+
 END_TEST
+// ================================ STR_N_CPY ============================
+START_TEST(test_str_n_copy_full) {
+  char src[128];
+  feelString(src);
+  char dest[128];
+  s21_strncpy(dest, src, s21_strlen(src));
+  ck_assert_str_eq(dest, src);
+}
+END_TEST
+START_TEST(test_str_n_partial_copy) {
+  const char *src = "Hello, world!";
+  char dest[15];
+  feelCharString(dest, '_', 14);
+  s21_strncpy(dest, src, 5);
+  assert_strn_eq(dest, "Hello", 5);
+  ck_assert(dest[5] != '\0');  // strncpy не добавляет '\0' при n <= strlen(src)
+}
+END_TEST
+START_TEST(test_str_n_copy_with_zeros) {
+  char *src = "Hello!";
+  char dest[15] = {0};
+  s21_size_t len = s21_strlen(src);
+  s21_strncpy(dest, src, 13);
+  assert_strn_eq(dest, src, len);
+  for (s21_size_t i = len; i < 13; i++) {
+    ck_assert(dest[i] == '\0');
+  }
+}
+END_TEST
+START_TEST(test_str_n_copy_empty_string) {
+  char dest[100] = "Garbage";
+  s21_strncpy(dest, "", 10);
+  ck_assert(dest[0] == '\0');
+}
+END_TEST
+// =======================================================================
 
 Suite *math_suite(void) {
   Suite *s;
@@ -118,6 +171,11 @@ Suite *math_suite(void) {
   tcase_add_test(tc_core, test_memchr_nochrinstr);
   tcase_add_test(tc_core, test_memchr_nol);
   tcase_add_test(tc_core, test_memchr_bin);
+  // ================================ STR_N_CPY ============================
+  tcase_add_test(tc_core, test_str_n_copy_full);
+  tcase_add_test(tc_core, test_str_n_partial_copy);
+  tcase_add_test(tc_core, test_str_n_copy_with_zeros);
+  tcase_add_test(tc_core, test_str_n_copy_empty_string);
   // =======================================================================
   suite_add_tcase(s, tc_core);
 
