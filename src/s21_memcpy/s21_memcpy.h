@@ -1,8 +1,8 @@
-#ifndef S21_MEMCHR_H
-#define S21_MEMCHR_H
+#ifndef S21_MEMCPY_H
+#define S21_MEMCPY_H
 
 #include "../common/basetypes.h"
 
-void *s21_memchr(const void *, int, s21_size_t);
+void *s21_memcpy(void *, const void *, s21_size_t);
 
 #endif
