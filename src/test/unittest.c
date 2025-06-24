@@ -146,6 +146,60 @@ START_TEST(test_str_n_copy_empty_string) {
   ck_assert(dest[0] == '\0');
 }
 END_TEST
+// ================================ STR CHR ==============================
+START_TEST(test_strchr_char_fullchar) {
+  char str[128];
+  feelString(str);
+  char *result = NULL;
+  char *expected = NULL;
+  for (s21_size_t i = 0; i < 128; i++) {
+    result = s21_strchr(str, str[i]);
+    expected = strchr(str, str[i]);
+    ck_assert_ptr_eq(result, expected);
+  }
+}
+END_TEST
+START_TEST(test_strchr_char_several) {
+  const char *str = "Hello, World!";
+  char *result = NULL;
+  char *expected = NULL;
+  for (s21_size_t i = 0; i < 13; i++) {
+    result = s21_strchr(str, str[i]);
+    expected = strchr(str, str[i]);
+    ck_assert_ptr_eq(result, expected);
+  }
+  result = s21_strchr(str, 'x');
+  expected = strchr(str, 'x');
+  ck_assert_ptr_eq(result, expected);
+}
+END_TEST
+// ================================ MEM SET ==============================
+// ================================ MEM CPY ==============================
+// START_TEST(test_memcpy_basic) {
+//     char src[128];
+//     feelString(src);
+//     char dest0[128];
+//     feelCharString(dest0, '_', 128);
+//     char dest21[128];
+//     feelCharString(dest21, '_', 128);
+//     memcpy(dest0, src, 128);
+//     s21_memcpy(dest21, src, 128);
+//     assert_strn_eq(dest0, dest21, 128);
+// }
+// END_TEST
+// ================================ MEM CMP ==============================
+// START_TEST(test_memcmp_equal) {
+//     char str1[128];
+//     feelString(str1);
+//     char str2[128];
+//     feelString(str2);
+//     s21_size_t n = s21_strlen(str1);
+//     int result = s21_memcmp(str1, str2, n);
+//     int expected = memcmp(str1, str2, n);
+//     ck_assert_int_eq(result, expected);
+//     ck_assert_int_eq(result, 0);
+// }
+// END_TEST
 // =======================================================================
 
 Suite *math_suite(void) {
@@ -176,6 +230,14 @@ Suite *math_suite(void) {
   tcase_add_test(tc_core, test_str_n_partial_copy);
   tcase_add_test(tc_core, test_str_n_copy_with_zeros);
   tcase_add_test(tc_core, test_str_n_copy_empty_string);
+  // ================================ STR CHR ==============================
+  tcase_add_test(tc_core, test_strchr_char_fullchar);
+  tcase_add_test(tc_core, test_strchr_char_several);
+  // ================================ MEM SET ==============================
+  // ================================ MEM CPY ==============================
+  // tcase_add_test(tc_core, test_memcpy_basic);
+  // ================================ MEM CMP ==============================
+  //tcase_add_test(tc_core, test_memcmp_equal);
   // =======================================================================
   suite_add_tcase(s, tc_core);
 
