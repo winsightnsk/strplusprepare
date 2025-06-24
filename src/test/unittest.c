@@ -159,18 +159,17 @@ START_TEST(test_strchr_char_fullchar) {
   }
 }
 END_TEST
-START_TEST(test_strchr_char_several) {
+START_TEST(test_strchr_char_nochar) {
   const char *str = "Hello, World!";
   char *result = NULL;
   char *expected = NULL;
-  for (s21_size_t i = 0; i < 13; i++) {
-    result = s21_strchr(str, str[i]);
-    expected = strchr(str, str[i]);
+  char seekch[128];
+  feelString(seekch);
+  for (s21_size_t i = 0; i < 127; i++) {
+    result = s21_strchr(str, seekch[i]);
+    expected = strchr(str, seekch[i]);
     ck_assert_ptr_eq(result, expected);
   }
-  result = s21_strchr(str, 'x');
-  expected = strchr(str, 'x');
-  ck_assert_ptr_eq(result, expected);
 }
 END_TEST
 // ================================ MEM SET ==============================
@@ -232,7 +231,7 @@ Suite *math_suite(void) {
   tcase_add_test(tc_core, test_str_n_copy_empty_string);
   // ================================ STR CHR ==============================
   tcase_add_test(tc_core, test_strchr_char_fullchar);
-  tcase_add_test(tc_core, test_strchr_char_several);
+  tcase_add_test(tc_core, test_strchr_char_nochar);
   // ================================ MEM SET ==============================
   // ================================ MEM CPY ==============================
   // tcase_add_test(tc_core, test_memcpy_basic);
