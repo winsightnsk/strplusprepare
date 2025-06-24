@@ -378,10 +378,81 @@ void  testStrPbrk(TCase *tc_core) {
   tcase_add_test(tc_core, test_s21_strpbrk_null_terminator_in_accept);
   tcase_add_test(tc_core, test_s21_strpbrk_full_string);
 }
-// ================================ STR CSPN =============================
-// void testStrCspn(TCase *tc_core) {
 
-// }
+// ================================ STR CSPN =============================
+START_TEST(test_cspn_empty_str1) {
+  const char *str1 = "";
+  const char *str2 = "abc";
+  ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
+}
+END_TEST
+START_TEST(test_cspn_empty_str2) {
+  const char *str1 = "hello";
+  const char *str2 = "";
+  ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
+}
+END_TEST
+START_TEST(test_cspn_both_empty) {
+    const char *str1 = "";
+    const char *str2 = "";
+    ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
+}
+END_TEST
+START_TEST(test_cspn_no_matches) {
+    const char *str1 = "hello world";
+    const char *str2 = "xyz";
+    ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
+}
+END_TEST
+START_TEST(test_cspn_first_char_match) {
+    const char *str1 = "apple";
+    const char *str2 = "a";
+    ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
+}
+END_TEST
+START_TEST(test_cspn_last_char_match) {
+    const char *str1 = "banana";
+    const char *str2 = "a";
+    ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
+}
+END_TEST
+START_TEST(test_cspn_multiple_matches) {
+    const char *str1 = "programming";
+    const char *str2 = "gm";
+    ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
+}
+END_TEST
+START_TEST(test_cspn_all_chars_match) {
+    const char *str1 = "aaa";
+    const char *str2 = "a";
+    ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
+}
+END_TEST
+START_TEST(test_cspn_special_chars) {
+    const char *str1 = "hello\nworld\t!";
+    const char *str2 = "\t\n";
+    ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
+}
+END_TEST
+START_TEST(test_long_strings) {
+    char str1[128];
+    feelString(str1);
+    const char *str2 = "xyzq";
+    ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
+}
+END_TEST
+void testStrCspn(TCase *tc_core) {
+  tcase_add_test(tc_core, test_cspn_empty_str1);
+  tcase_add_test(tc_core, test_cspn_empty_str2);
+  tcase_add_test(tc_core, test_cspn_both_empty);
+  tcase_add_test(tc_core, test_cspn_no_matches);
+  tcase_add_test(tc_core, test_cspn_first_char_match);
+  tcase_add_test(tc_core, test_cspn_last_char_match);
+  tcase_add_test(tc_core, test_cspn_multiple_matches);
+  tcase_add_test(tc_core, test_cspn_all_chars_match);
+  tcase_add_test(tc_core, test_cspn_special_chars);
+  tcase_add_test(tc_core, test_long_strings);
+}
 
 // ================================ MEM SET ==============================
 // ================================ MEM CPY ==============================
@@ -425,7 +496,7 @@ Suite *math_suite(void) {
   testStrChr(tc_core);
   testStrNCat(tc_core, tc_limits);
   testStrPbrk(tc_core);
-  // testStrCspn(tc_core);
+  testStrCspn(tc_core);
   // ================================ MEM SET ==============================
   // ================================ MEM CPY ==============================
   // tcase_add_test(tc_core, test_memcpy_basic);
