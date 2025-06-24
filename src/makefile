@@ -3,7 +3,7 @@ CFLAGS=--coverage -Wall -Wextra -Werror
 LIBS=-lcheck -lsubunit -lm -lpthread -lgcov
 CLF=clang-format
 
-FOLDERS:=. common s21_strlen s21_strncmp s21_memchr s21_strncpy s21_strchr
+FOLDERS:=. common s21_strlen s21_strncmp s21_memchr s21_strncpy s21_strchr s21_strncat
 # s21_memset
 # s21_memcpy
 # s21_memcmp

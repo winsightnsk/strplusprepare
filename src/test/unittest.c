@@ -1,12 +1,13 @@
 #include <check.h>
 #include <string.h>
 
+#include <signal.h>  // Добавлено для SIGSEGV
 #include "../s21_string.h"
 
 // Свой асерт для проверки частичного раверства строк
 void assert_strn_eq(char *dest, char *src, s21_size_t count) {
   for (s21_size_t i = 0; i < count; i++, dest++, src++)
-    ck_assert_int_eq(*dest, *src);
+  ck_assert_int_eq(*dest, *src);
 }
 
 // Функция для заполнения строки из символов ASCII от 127 до 0
@@ -36,6 +37,10 @@ START_TEST(test_s21_size_t) {
   ck_assert_uint_eq(a, 1UL);
 }
 END_TEST
+void testBaseTypes(TCase *tc_core) {
+  tcase_add_test(tc_core, test_s21_null);
+  tcase_add_test(tc_core, test_s21_size_t);
+}
 
 // ================================ STR_LEN ==============================
 START_TEST(test_strlen_empty) {
@@ -55,6 +60,11 @@ START_TEST(test_strlen_hundredsixty) {
   // free(str);
 }
 END_TEST
+void testStrLen(TCase *tc_core) {
+  tcase_add_test(tc_core, test_strlen_empty);
+  tcase_add_test(tc_core, test_strlen_single_char);
+  tcase_add_test(tc_core, test_strlen_hundredsixty);
+}
 
 // ================================ STR_N_CMP ============================
 START_TEST(test_strncmp_empty) {
@@ -77,6 +87,11 @@ START_TEST(test_strncmp_different) {
   const char *str2 = "Hello, World!";
   for (s21_size_t i = 0; i < s21_strlen(str2 + 1); i++)
     ck_assert_int_eq(s21_strncmp(str1, str2, i), strncmp(str1, str2, i));
+}
+void testStrNCmp(TCase *tc_core) {
+  tcase_add_test(tc_core, test_strncmp_empty);
+  tcase_add_test(tc_core, test_strncmp_single_char);
+  tcase_add_test(tc_core, test_strncmp_different);
 }
 
 // ================================ STR_MEM_CHR ==========================
@@ -109,8 +124,14 @@ START_TEST(test_memchr_bin) {
                      memchr(data, data[i], sizeof(data)));
   }
 }
-
 END_TEST
+void testMemChr(TCase *tc_core) {
+  tcase_add_test(tc_core, test_memchr_instr);
+  tcase_add_test(tc_core, test_memchr_nochrinstr);
+  tcase_add_test(tc_core, test_memchr_nol);
+  tcase_add_test(tc_core, test_memchr_bin);
+}
+
 // ================================ STR_N_CPY ============================
 START_TEST(test_str_n_copy_full) {
   char src[128];
@@ -146,6 +167,13 @@ START_TEST(test_str_n_copy_empty_string) {
   ck_assert(dest[0] == '\0');
 }
 END_TEST
+void testStrNCpy(TCase *tc_core) {
+  tcase_add_test(tc_core, test_str_n_copy_full);
+  tcase_add_test(tc_core, test_str_n_partial_copy);
+  tcase_add_test(tc_core, test_str_n_copy_with_zeros);
+  tcase_add_test(tc_core, test_str_n_copy_empty_string);
+}
+
 // ================================ STR CHR ==============================
 START_TEST(test_strchr_char_fullchar) {
   char str[128];
@@ -172,6 +200,96 @@ START_TEST(test_strchr_char_nochar) {
   }
 }
 END_TEST
+START_TEST(test_strchr_empty_string) {
+  const char *str = "";
+  char seekch[128];
+  feelString(seekch);
+  char *result = NULL;
+  char *expected = NULL;
+  for (s21_size_t i = 0; i < 128; i++) {
+    result = s21_strchr(str, seekch[i]);
+    expected = strchr(str, seekch[i]);
+    ck_assert_ptr_eq(result, expected);
+  }
+}
+END_TEST
+START_TEST(test_strchr_first_occurrence) {
+    const char *str = "Hello, World!";
+  // Должен вернуть указатель на первую 'l'
+  char *result = s21_strchr(str, 'l');
+  char *expected = strchr(str, 'l');
+  ck_assert_ptr_eq(result, expected);
+}
+END_TEST
+void testStrChr(TCase *tc_core) {
+  tcase_add_test(tc_core, test_strchr_char_fullchar);
+  tcase_add_test(tc_core, test_strchr_char_nochar);
+  tcase_add_test(tc_core, test_strchr_empty_string);
+  tcase_add_test(tc_core, test_strchr_first_occurrence);
+}
+
+// ================================ STR N CAT ============================
+START_TEST(test_strncat_basic) {
+  char str[14] = "Hello";
+  const char *postfix = ", World!";
+  char *ptr = s21_strncat(str, postfix, 8);
+  ck_assert_str_eq(str, "Hello, World!");
+  ck_assert_ptr_eq(str, ptr);
+}
+END_TEST
+START_TEST(test_strncat_with_limit) {
+  char dest[13] = "Hello";
+  const char *src = ", World!";
+  s21_strncat(dest, src, 3);
+  ck_assert_str_eq(dest, "Hello, W");
+}
+END_TEST
+START_TEST(test_strncat_empty_src) {
+  char dest_base[14] = "Hello";
+  char dest_s21[14] = "Hello";
+  const char *src = "";
+  size_t n = 5;
+  strncat(dest_base, src, n);
+  s21_strncat(dest_s21, src, n);
+  ck_assert_str_eq(dest_base, dest_s21);
+}
+END_TEST
+START_TEST(test_strncat_zero_n) {
+  char dest_base[14] = "Hello";
+  char dest_s21[14] = "Hello";
+  const char *src = ", World!";
+  size_t n = 0;
+  strncat(dest_base, src, n);
+  s21_strncat(dest_s21, src, n);
+  ck_assert_str_eq(dest_base, dest_s21);
+}
+END_TEST
+START_TEST(test_strncat_n_greater_than_src) {
+  char dest_base[14] = "Hello";
+  char dest_s21[14] = "Hello";
+  const char *src = "!";
+  size_t n = 5;
+  strncat(dest_base, src, n);
+  s21_strncat(dest_s21, src, n);
+  ck_assert_str_eq(dest_base, dest_s21);
+}
+END_TEST
+START_TEST(test_strncat_null_dest) {
+  char *dest = NULL;
+  const char *src = "test";
+  // Ожидаем падение (как и стандартная strncat)
+  s21_strncat(dest, src, 3);
+}
+END_TEST
+void testStrNCat(TCase *tc_core, TCase *tc_limits) {
+  tcase_add_test(tc_core, test_strncat_basic);
+  tcase_add_test(tc_core, test_strncat_with_limit);
+  tcase_add_test(tc_core, test_strncat_empty_src);
+  tcase_add_test(tc_core, test_strncat_zero_n);
+  tcase_add_test(tc_core, test_strncat_n_greater_than_src);
+  tcase_add_test_raise_signal(tc_limits, test_strncat_null_dest, SIGSEGV);
+}
+
 // ================================ MEM SET ==============================
 // ================================ MEM CPY ==============================
 // START_TEST(test_memcpy_basic) {
@@ -202,45 +320,27 @@ END_TEST
 // =======================================================================
 
 Suite *math_suite(void) {
-  Suite *s;
-  TCase *tc_core;
+  Suite *testsuite = suite_create("s21_string");
+  TCase *tc_core = tcase_create("Core");
+  TCase *tc_limits = tcase_create("Limits");
 
-  s = suite_create("s21_string");
-
-  tc_core = tcase_create("Core");
-  // ================================ BASETYPES ============================
-  tcase_add_test(tc_core, test_s21_null);
-  tcase_add_test(tc_core, test_s21_size_t);
-  // ================================ STR_LEN ==============================
-  tcase_add_test(tc_core, test_strlen_empty);
-  tcase_add_test(tc_core, test_strlen_single_char);
-  tcase_add_test(tc_core, test_strlen_hundredsixty);
-  // ================================ STR_N_CMP ============================
-  tcase_add_test(tc_core, test_strncmp_empty);
-  tcase_add_test(tc_core, test_strncmp_single_char);
-  tcase_add_test(tc_core, test_strncmp_different);
-  // ================================ STR_MEM_CHR ==========================
-  tcase_add_test(tc_core, test_memchr_instr);
-  tcase_add_test(tc_core, test_memchr_nochrinstr);
-  tcase_add_test(tc_core, test_memchr_nol);
-  tcase_add_test(tc_core, test_memchr_bin);
-  // ================================ STR_N_CPY ============================
-  tcase_add_test(tc_core, test_str_n_copy_full);
-  tcase_add_test(tc_core, test_str_n_partial_copy);
-  tcase_add_test(tc_core, test_str_n_copy_with_zeros);
-  tcase_add_test(tc_core, test_str_n_copy_empty_string);
-  // ================================ STR CHR ==============================
-  tcase_add_test(tc_core, test_strchr_char_fullchar);
-  tcase_add_test(tc_core, test_strchr_char_nochar);
+  testBaseTypes(tc_core);
+  testStrLen(tc_core);
+  testStrNCmp(tc_core);
+  testMemChr(tc_core);
+  testStrNCpy(tc_core);
+  testStrChr(tc_core);
+  testStrNCat(tc_core, tc_limits);
   // ================================ MEM SET ==============================
   // ================================ MEM CPY ==============================
   // tcase_add_test(tc_core, test_memcpy_basic);
   // ================================ MEM CMP ==============================
   //tcase_add_test(tc_core, test_memcmp_equal);
   // =======================================================================
-  suite_add_tcase(s, tc_core);
+  suite_add_tcase(testsuite, tc_core);
+  suite_add_tcase(testsuite, tc_limits);
 
-  return s;
+  return testsuite;
 }
 
 int main(void) {
