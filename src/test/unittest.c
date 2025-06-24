@@ -290,6 +290,99 @@ void testStrNCat(TCase *tc_core, TCase *tc_limits) {
   tcase_add_test_raise_signal(tc_limits, test_strncat_null_dest, SIGSEGV);
 }
 
+// ================================ STR PBRK ============================
+START_TEST(test_s21_strpbrk_basic) {
+  const char *str = "Hello, world!";
+  const char *accept = " ,!";
+  char *result = s21_strpbrk(str, accept);
+  char *expected = strpbrk(str, accept);
+  ck_assert_ptr_eq(result, expected);
+}
+END_TEST
+START_TEST(test_s21_strpbrk_no_match) {
+  const char *str = "Hello";
+  const char *accept = "123";
+  char *result = s21_strpbrk(str, accept);
+  char *expected = strpbrk(str, accept);
+  ck_assert_ptr_eq(result, expected);
+}
+END_TEST
+START_TEST(test_s21_strpbrk_empty_accept) {
+  const char *str = "Hello";
+  const char *accept = "";
+  char *result = s21_strpbrk(str, accept);
+  char *expected = strpbrk(str, accept);
+  ck_assert_ptr_eq(result, expected);
+}
+END_TEST
+START_TEST(test_s21_strpbrk_empty_str) {
+  const char *str = "";
+  const char *accept = "abc";
+  char *result = s21_strpbrk(str, accept);
+  char *expected = strpbrk(str, accept);
+  ck_assert_ptr_eq(result, expected);
+}
+END_TEST
+START_TEST(test_s21_strpbrk_first_char_match) {
+  const char *str = "abcde";
+  const char *accept = "a";
+  char *result = s21_strpbrk(str, accept);
+  char *expected = strpbrk(str, accept);
+  ck_assert_ptr_eq(result, expected);
+}
+END_TEST
+START_TEST(test_s21_strpbrk_last_char_match) {
+  const char *str = "abcdef";
+  const char *accept = "f";
+  char *result = s21_strpbrk(str, accept);
+  char *expected = strpbrk(str, accept);
+  ck_assert_ptr_eq(result, expected);
+}
+END_TEST
+START_TEST(test_s21_strpbrk_multiple_matches) {
+  const char *str = "This is a test";
+  const char *accept = "aeiou";
+  char *result = s21_strpbrk(str, accept);
+  char *expected = strpbrk(str, accept);
+  ck_assert_ptr_eq(result, expected);
+}
+END_TEST
+START_TEST(test_s21_strpbrk_null_terminator_in_accept) {
+  const char *str = "Hello\0world";
+  const char *accept = "\0";
+  char *result = s21_strpbrk(str, accept);
+  char *expected = strpbrk(str, accept);
+  ck_assert_ptr_eq(result, expected);
+}
+END_TEST
+START_TEST(test_s21_strpbrk_full_string) {
+  char str[128];
+  feelString(str);
+  char accept[26];
+  for (int i = 1; i <= 25; i++) {
+    accept[i-1] = i * 5;
+  }
+  accept[25] = '\0';
+  char *result = s21_strpbrk(str, accept);
+  char *expected = strpbrk(str, accept);
+  ck_assert_ptr_eq(result, expected);
+}
+void  testStrPbrk(TCase *tc_core) {
+  tcase_add_test(tc_core, test_s21_strpbrk_basic);
+  tcase_add_test(tc_core, test_s21_strpbrk_no_match);
+  tcase_add_test(tc_core, test_s21_strpbrk_empty_accept);
+  tcase_add_test(tc_core, test_s21_strpbrk_empty_str);
+  tcase_add_test(tc_core, test_s21_strpbrk_first_char_match);
+  tcase_add_test(tc_core, test_s21_strpbrk_last_char_match);
+  tcase_add_test(tc_core, test_s21_strpbrk_multiple_matches);
+  tcase_add_test(tc_core, test_s21_strpbrk_null_terminator_in_accept);
+  tcase_add_test(tc_core, test_s21_strpbrk_full_string);
+}
+// ================================ STR CSPN =============================
+// void testStrCspn(TCase *tc_core) {
+
+// }
+
 // ================================ MEM SET ==============================
 // ================================ MEM CPY ==============================
 // START_TEST(test_memcpy_basic) {
@@ -331,11 +424,13 @@ Suite *math_suite(void) {
   testStrNCpy(tc_core);
   testStrChr(tc_core);
   testStrNCat(tc_core, tc_limits);
+  testStrPbrk(tc_core);
+  // testStrCspn(tc_core);
   // ================================ MEM SET ==============================
   // ================================ MEM CPY ==============================
   // tcase_add_test(tc_core, test_memcpy_basic);
   // ================================ MEM CMP ==============================
-  //tcase_add_test(tc_core, test_memcmp_equal);
+  // tcase_add_test(tc_core, test_memcmp_equal);
   // =======================================================================
   suite_add_tcase(testsuite, tc_core);
   suite_add_tcase(testsuite, tc_limits);
