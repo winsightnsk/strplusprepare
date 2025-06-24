@@ -1,13 +1,13 @@
 #include <check.h>
+#include <signal.h>  // Добавлено для SIGSEGV
 #include <string.h>
 
-#include <signal.h>  // Добавлено для SIGSEGV
 #include "../s21_string.h"
 
 // Свой асерт для проверки частичного раверства строк
 void assert_strn_eq(char *dest, char *src, s21_size_t count) {
   for (s21_size_t i = 0; i < count; i++, dest++, src++)
-  ck_assert_int_eq(*dest, *src);
+    ck_assert_int_eq(*dest, *src);
 }
 
 // Функция для заполнения строки из символов ASCII от 127 до 0
@@ -214,7 +214,7 @@ START_TEST(test_strchr_empty_string) {
 }
 END_TEST
 START_TEST(test_strchr_first_occurrence) {
-    const char *str = "Hello, World!";
+  const char *str = "Hello, World!";
   // Должен вернуть указатель на первую 'l'
   char *result = s21_strchr(str, 'l');
   char *expected = strchr(str, 'l');
@@ -360,14 +360,14 @@ START_TEST(test_s21_strpbrk_full_string) {
   feelString(str);
   char accept[26];
   for (int i = 1; i <= 25; i++) {
-    accept[i-1] = i * 5;
+    accept[i - 1] = i * 5;
   }
   accept[25] = '\0';
   char *result = s21_strpbrk(str, accept);
   char *expected = strpbrk(str, accept);
   ck_assert_ptr_eq(result, expected);
 }
-void  testStrPbrk(TCase *tc_core) {
+void testStrPbrk(TCase *tc_core) {
   tcase_add_test(tc_core, test_s21_strpbrk_basic);
   tcase_add_test(tc_core, test_s21_strpbrk_no_match);
   tcase_add_test(tc_core, test_s21_strpbrk_empty_accept);
@@ -393,52 +393,52 @@ START_TEST(test_cspn_empty_str2) {
 }
 END_TEST
 START_TEST(test_cspn_both_empty) {
-    const char *str1 = "";
-    const char *str2 = "";
-    ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
+  const char *str1 = "";
+  const char *str2 = "";
+  ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
 }
 END_TEST
 START_TEST(test_cspn_no_matches) {
-    const char *str1 = "hello world";
-    const char *str2 = "xyz";
-    ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
+  const char *str1 = "hello world";
+  const char *str2 = "xyz";
+  ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
 }
 END_TEST
 START_TEST(test_cspn_first_char_match) {
-    const char *str1 = "apple";
-    const char *str2 = "a";
-    ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
+  const char *str1 = "apple";
+  const char *str2 = "a";
+  ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
 }
 END_TEST
 START_TEST(test_cspn_last_char_match) {
-    const char *str1 = "banana";
-    const char *str2 = "a";
-    ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
+  const char *str1 = "banana";
+  const char *str2 = "a";
+  ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
 }
 END_TEST
 START_TEST(test_cspn_multiple_matches) {
-    const char *str1 = "programming";
-    const char *str2 = "gm";
-    ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
+  const char *str1 = "programming";
+  const char *str2 = "gm";
+  ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
 }
 END_TEST
 START_TEST(test_cspn_all_chars_match) {
-    const char *str1 = "aaa";
-    const char *str2 = "a";
-    ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
+  const char *str1 = "aaa";
+  const char *str2 = "a";
+  ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
 }
 END_TEST
 START_TEST(test_cspn_special_chars) {
-    const char *str1 = "hello\nworld\t!";
-    const char *str2 = "\t\n";
-    ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
+  const char *str1 = "hello\nworld\t!";
+  const char *str2 = "\t\n";
+  ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
 }
 END_TEST
 START_TEST(test_long_strings) {
-    char str1[128];
-    feelString(str1);
-    const char *str2 = "xyzq";
-    ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
+  char str1[128];
+  feelString(str1);
+  const char *str2 = "xyzq";
+  ck_assert_uint_eq(s21_strcspn(str1, str2), strcspn(str1, str2));
 }
 END_TEST
 void testStrCspn(TCase *tc_core) {
