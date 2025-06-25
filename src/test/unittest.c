@@ -1,4 +1,5 @@
 #include <check.h>
+#include <limits.h>
 #include <signal.h>  // Добавлено для SIGSEGV
 #include <string.h>
 
@@ -37,7 +38,7 @@ START_TEST(test_s21_size_t) {
   ck_assert_uint_eq(a, 1UL);
 }
 END_TEST
-void testBaseTypes(TCase *tc_core) {
+void testCommon(TCase *tc_core) {
   tcase_add_test(tc_core, test_s21_null);
   tcase_add_test(tc_core, test_s21_size_t);
 }
@@ -454,33 +455,186 @@ void testStrCspn(TCase *tc_core) {
   tcase_add_test(tc_core, test_long_strings);
 }
 
-// ================================ MEM SET ==============================
 // ================================ MEM CPY ==============================
-// START_TEST(test_memcpy_basic) {
-//     char src[128];
-//     feelString(src);
-//     char dest0[128];
-//     feelCharString(dest0, '_', 128);
-//     char dest21[128];
-//     feelCharString(dest21, '_', 128);
-//     memcpy(dest0, src, 128);
-//     s21_memcpy(dest21, src, 128);
-//     assert_strn_eq(dest0, dest21, 128);
-// }
-// END_TEST
+START_TEST(test_memcpy_basic) {
+  char src[128];
+  feelString(src);
+  char result[128];
+  char expected[128];
+  memset(result, '_', 128);
+  memset(expected, '_', 128);
+  s21_memcpy(result, src, 128);
+  memcpy(expected, src, 128);
+  assert_strn_eq(result, expected, 128);
+}
+END_TEST
+START_TEST(test_memcpy_partial) {
+  char src[] = "Testing partial copy";
+  char expected[20] = {0};
+  char result[20] = {0};
+  s21_size_t len = 7;  // Копируем только "Testing"
+  memcpy(expected, src, len);
+  s21_memcpy(result, src, len);
+  ck_assert_int_eq(memcmp(expected, result, len), 0);
+}
+END_TEST
+START_TEST(test_memcpy_zero_bytes) {
+  char src[] = "Should not copy anything";
+  char expected[9] = "Original";
+  char result[9] = "Original";
+  memcpy(expected, src, 0);
+  s21_memcpy(result, src, 0);
+  ck_assert_int_eq(memcmp(expected, result, 9), 0);
+}
+END_TEST
+START_TEST(test_memcpy_overlap) {
+  char buffer1[14] = "Hello, world!";
+  char buffer2[14] = "Hello, world!";
+  memcpy(buffer1 + 5, buffer1, 7);
+  s21_memcpy(buffer2 + 5, buffer2, 7);
+  ck_assert_int_eq(memcmp(buffer1, buffer2, 14), 0);
+}
+END_TEST
+START_TEST(test_memcpy_non_string_data) {
+  int src[] = {1, 2, 3, 4, 5};
+  int expected[5] = {0};
+  int result[5] = {0};
+  s21_size_t len = sizeof(src);
+  memcpy(expected, src, len);
+  s21_memcpy(result, src, len);
+  ck_assert_int_eq(memcmp(expected, result, len), 0);
+}
+void testMemCpy(TCase *tc_core) {
+  tcase_add_test(tc_core, test_memcpy_basic);
+  tcase_add_test(tc_core, test_memcpy_partial);
+  tcase_add_test(tc_core, test_memcpy_zero_bytes);
+  tcase_add_test(tc_core, test_memcpy_overlap);
+  tcase_add_test(tc_core, test_memcpy_non_string_data);
+}
+
+// ================================ MEM SET ==============================
+START_TEST(test_memset_basic) {
+  char result[10];
+  char expected[10];
+  s21_memset(result, 0, 10);
+  memset(expected, 0, 10);
+  ck_assert_mem_eq(result, expected, 10);
+  s21_memset(result, 'A', 5);
+  memset(expected, 'A', 5);
+  ck_assert_mem_eq(result, expected, 10);
+}
+END_TEST
+START_TEST(test_memset_edge_cases) {
+  char buffer[10] = "123456789";
+  s21_memset(buffer, 'X', 0);
+  ck_assert_str_eq(buffer, "123456789");
+  s21_memset(buffer, 'Y', 1);
+  ck_assert_str_eq(buffer, "Y23456789");
+}
+END_TEST
+START_TEST(test_memset_int) {
+  int result[10];
+  int expected[10];
+  s21_memset(result, INT_MAX, 10 * sizeof(int));
+  memset(expected, INT_MAX, 10 * sizeof(int));
+  ck_assert_mem_eq(result, expected, 10);
+  s21_memset(result, INT_MIN, 5 * sizeof(int));
+  memset(expected, INT_MIN, 5 * sizeof(int));
+  ck_assert_mem_eq(result, expected, 10);
+}
+END_TEST
+START_TEST(test_memset_uint) {
+  unsigned int result[10];
+  unsigned int expected[10];
+  s21_memset(result, UINT_MAX, 10 * sizeof(unsigned int));
+  memset(expected, UINT_MAX, 10 * sizeof(unsigned int));
+  ck_assert_mem_eq(result, expected, 10);
+  s21_memset(result, 0, 5 * sizeof(unsigned int));
+  memset(expected, 0, 5 * sizeof(unsigned int));
+  ck_assert_mem_eq(result, expected, 10);
+}
+END_TEST
+void testMemSet(TCase *tc_core) {
+  tcase_add_test(tc_core, test_memset_basic);
+  tcase_add_test(tc_core, test_memset_edge_cases);
+  tcase_add_test(tc_core, test_memset_int);
+  tcase_add_test(tc_core, test_memset_uint);
+}
+
 // ================================ MEM CMP ==============================
-// START_TEST(test_memcmp_equal) {
-//     char str1[128];
-//     feelString(str1);
-//     char str2[128];
-//     feelString(str2);
-//     s21_size_t n = s21_strlen(str1);
-//     int result = s21_memcmp(str1, str2, n);
-//     int expected = memcmp(str1, str2, n);
-//     ck_assert_int_eq(result, expected);
-//     ck_assert_int_eq(result, 0);
-// }
-// END_TEST
+START_TEST(test_memcmp_equal) {
+  char str1[128];
+  feelString(str1);
+  char str2[128];
+  feelString(str2);
+  s21_size_t n = s21_strlen(str1);
+  int result = s21_memcmp(str1, str2, n);
+  int expected = memcmp(str1, str2, n);
+  ck_assert_int_eq(result, expected);
+  ck_assert_int_eq(result, 0);
+}
+END_TEST
+START_TEST(test_memcmp_different) {
+  char str1[] = "Hello, world!";
+  char str2[] = "Hello, World!";
+  s21_size_t n = s21_strlen(str1);
+
+  int result = s21_memcmp(str1, str2, n);
+  int expected = memcmp(str1, str2, n);
+
+  ck_assert_int_eq(result, expected);
+  ck_assert(result != 0);
+}
+END_TEST
+START_TEST(test_memcmp_partial) {
+  char str1[] = "Hello, world!";
+  char str2[] = "Hello, there!";
+  s21_size_t n = 7;  // Сравниваем только "Hello, "
+  int result = s21_memcmp(str1, str2, n);
+  int expected = memcmp(str1, str2, n);
+  ck_assert_int_eq(result, expected);
+  ck_assert_int_eq(result, 0);
+}
+END_TEST
+START_TEST(test_memcmp_zero_length) {
+  char str1[] = "Hello, world!";
+  char str2[] = "Goodbye, world!";
+  s21_size_t n = 0;  // Нулевая длина
+  int result = s21_memcmp(str1, str2, n);
+  int expected = memcmp(str1, str2, n);
+  ck_assert_int_eq(result, expected);
+  ck_assert_int_eq(result, 0);
+}
+END_TEST
+START_TEST(test_memcmp_binary_data) {
+  unsigned char data1[] = {0x00, 0x01, 0x02, 0x03, 0xFF};
+  unsigned char data2[] = {0x00, 0x01, 0x02, 0x04, 0xFE};
+  s21_size_t n = sizeof(data1);
+  int result = s21_memcmp(data1, data2, n);
+  int expected = memcmp(data1, data2, n);
+  ck_assert_int_eq(result, expected);
+  ck_assert(result < 0);  // 0x03 < 0x04
+}
+END_TEST
+START_TEST(test_memcmp_one_byte_diff) {
+  char str1[] = "abcde";
+  char str2[] = "abcdf";
+  s21_size_t n = strlen(str1);
+  int result = s21_memcmp(str1, str2, n);
+  int expected = memcmp(str1, str2, n);
+  ck_assert_int_eq(result, expected);
+  ck_assert(result < 0);  // 'e' < 'f'
+}
+END_TEST
+void testMemCmp(TCase *tc_core) {
+  tcase_add_test(tc_core, test_memcmp_equal);
+  tcase_add_test(tc_core, test_memcmp_different);
+  tcase_add_test(tc_core, test_memcmp_partial);
+  tcase_add_test(tc_core, test_memcmp_zero_length);
+  tcase_add_test(tc_core, test_memcmp_binary_data);
+  tcase_add_test(tc_core, test_memcmp_one_byte_diff);
+}
+
 // =======================================================================
 
 Suite *math_suite(void) {
@@ -488,21 +642,19 @@ Suite *math_suite(void) {
   TCase *tc_core = tcase_create("Core");
   TCase *tc_limits = tcase_create("Limits");
 
-  testBaseTypes(tc_core);
-  testStrLen(tc_core);
-  testStrNCmp(tc_core);
+  testCommon(tc_core);
   testMemChr(tc_core);
-  testStrNCpy(tc_core);
+  testMemCmp(tc_core);
+  testMemCpy(tc_core);
+  testMemSet(tc_core);
   testStrChr(tc_core);
-  testStrNCat(tc_core, tc_limits);
-  testStrPbrk(tc_core);
   testStrCspn(tc_core);
-  // ================================ MEM SET ==============================
-  // ================================ MEM CPY ==============================
-  // tcase_add_test(tc_core, test_memcpy_basic);
-  // ================================ MEM CMP ==============================
-  // tcase_add_test(tc_core, test_memcmp_equal);
-  // =======================================================================
+  testStrLen(tc_core);
+  testStrNCat(tc_core, tc_limits);
+  testStrNCmp(tc_core);
+  testStrNCpy(tc_core);
+  testStrPbrk(tc_core);
+
   suite_add_tcase(testsuite, tc_core);
   suite_add_tcase(testsuite, tc_limits);
 
