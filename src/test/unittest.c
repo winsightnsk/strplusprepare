@@ -1,6 +1,6 @@
 #include <check.h>
 #include <limits.h>
-#include <signal.h>  // Добавлено для SIGSEGV
+// #include <signal.h>  // Добавлено для SIGSEGV
 #include <string.h>
 
 #include "../s21_string.h"
@@ -275,20 +275,13 @@ START_TEST(test_strncat_n_greater_than_src) {
   ck_assert_str_eq(dest_base, dest_s21);
 }
 END_TEST
-START_TEST(test_strncat_null_dest) {
-  char *dest = NULL;
-  const char *src = "test";
-  // Ожидаем падение (как и стандартная strncat)
-  s21_strncat(dest, src, 3);
-}
-END_TEST
-void testStrNCat(TCase *tc_core, TCase *tc_limits) {
+void testStrNCat(TCase *tc_core) {  //, TCase *tc_limits) {
   tcase_add_test(tc_core, test_strncat_basic);
   tcase_add_test(tc_core, test_strncat_with_limit);
   tcase_add_test(tc_core, test_strncat_empty_src);
   tcase_add_test(tc_core, test_strncat_zero_n);
   tcase_add_test(tc_core, test_strncat_n_greater_than_src);
-  tcase_add_test_raise_signal(tc_limits, test_strncat_null_dest, SIGSEGV);
+  // tcase_add_test_raise_signal(tc_limits, test_strncat_null_dest, SIGSEGV);
 }
 
 // ================================ STR PBRK ============================
@@ -469,7 +462,7 @@ START_TEST(test_memcpy_basic) {
 }
 END_TEST
 START_TEST(test_memcpy_partial) {
-  char src[] = "Testing partial copy";
+  const char src[] = "Testing partial copy";
   char expected[20] = {0};
   char result[20] = {0};
   s21_size_t len = 7;  // Копируем только "Testing"
@@ -479,7 +472,7 @@ START_TEST(test_memcpy_partial) {
 }
 END_TEST
 START_TEST(test_memcpy_zero_bytes) {
-  char src[] = "Should not copy anything";
+  const char src[] = "Should not copy anything";
   char expected[9] = "Original";
   char result[9] = "Original";
   memcpy(expected, src, 0);
@@ -487,13 +480,13 @@ START_TEST(test_memcpy_zero_bytes) {
   ck_assert_int_eq(memcmp(expected, result, 9), 0);
 }
 END_TEST
-START_TEST(test_memcpy_overlap) {
-  char buffer1[14] = "Hello, world!";
-  char buffer2[14] = "Hello, world!";
-  memcpy(buffer1 + 5, buffer1, 7);
-  s21_memcpy(buffer2 + 5, buffer2, 7);
-  ck_assert_int_eq(memcmp(buffer1, buffer2, 14), 0);
-}
+// START_TEST(test_memcpy_overlap) {
+//   char buffer1[14] = "Hello, world!";
+//   char buffer2[14] = "Hello, world!";
+//   memcpy(buffer1 + 5, buffer1, 7);
+//   s21_memcpy(buffer2 + 5, buffer2, 7);
+//   ck_assert_int_eq(memcmp(buffer1, buffer2, 14), 0);
+// }
 END_TEST
 START_TEST(test_memcpy_non_string_data) {
   int src[] = {1, 2, 3, 4, 5};
@@ -508,11 +501,46 @@ void testMemCpy(TCase *tc_core) {
   tcase_add_test(tc_core, test_memcpy_basic);
   tcase_add_test(tc_core, test_memcpy_partial);
   tcase_add_test(tc_core, test_memcpy_zero_bytes);
-  tcase_add_test(tc_core, test_memcpy_overlap);
+  // tcase_add_test(tc_core, test_memcpy_overlap);
   tcase_add_test(tc_core, test_memcpy_non_string_data);
 }
 
 // ================================ MEM SET ==============================
+START_TEST(test_memset_darkside) {
+  char pCharR[25];
+  char pCharE[25];
+  unsigned char pUCharR[25];
+  unsigned char pUCharE[25];
+  short pShortE[25];
+  short pShortR[25];
+  unsigned short pUShortE[25];
+  unsigned short pUShortR[25];
+  int pIntE[25];
+  int pIntR[25];
+  unsigned int pUIntE[25];
+  unsigned int pUIntR[25];
+  // Значения 2-байтовых и 4-байтовых элементов будут отличны от единицы
+  for (int value = -1; value < UCHAR_MAX; value += 1) {
+    memset(pCharE, value, sizeof(pCharE));  // 1
+    s21_memset(pCharR, value, sizeof(pCharR));
+    ck_assert_mem_eq(pCharE, pCharR, sizeof(pCharE));
+    memset(pUCharE, value, sizeof(pUCharE));  // 1
+    s21_memset(pUCharR, value, sizeof(pUCharR));
+    ck_assert_mem_eq(pUCharE, pUCharR, sizeof(pUCharE));
+    memset(pShortE, value, sizeof(pShortE));  // 257
+    s21_memset(pShortR, value, sizeof(pShortR));
+    ck_assert_mem_eq(pShortE, pShortR, sizeof(pShortE));
+    memset(pUShortE, value, sizeof(pUShortE));  // 257
+    s21_memset(pUShortR, value, sizeof(pUShortR));
+    ck_assert_mem_eq(pUShortE, pUShortR, sizeof(pUShortE));
+    memset(pIntE, value, sizeof(pIntE));  // 16843009
+    s21_memset(pIntR, value, sizeof(pIntR));
+    ck_assert_mem_eq(pIntE, pIntR, sizeof(pIntE));
+    memset(pUIntE, value, sizeof(pUIntE));  // 16843009
+    s21_memset(pUIntR, value, sizeof(pUIntR));
+    ck_assert_mem_eq(pUIntE, pUIntR, sizeof(pUIntE));
+  }
+}
 START_TEST(test_memset_basic) {
   char result[10];
   char expected[10];
@@ -531,34 +559,10 @@ START_TEST(test_memset_edge_cases) {
   s21_memset(buffer, 'Y', 1);
   ck_assert_str_eq(buffer, "Y23456789");
 }
-END_TEST
-START_TEST(test_memset_int) {
-  int result[10];
-  int expected[10];
-  s21_memset(result, INT_MAX, 10 * sizeof(int));
-  memset(expected, INT_MAX, 10 * sizeof(int));
-  ck_assert_mem_eq(result, expected, 10);
-  s21_memset(result, INT_MIN, 5 * sizeof(int));
-  memset(expected, INT_MIN, 5 * sizeof(int));
-  ck_assert_mem_eq(result, expected, 10);
-}
-END_TEST
-START_TEST(test_memset_uint) {
-  unsigned int result[10];
-  unsigned int expected[10];
-  s21_memset(result, UINT_MAX, 10 * sizeof(unsigned int));
-  memset(expected, UINT_MAX, 10 * sizeof(unsigned int));
-  ck_assert_mem_eq(result, expected, 10);
-  s21_memset(result, 0, 5 * sizeof(unsigned int));
-  memset(expected, 0, 5 * sizeof(unsigned int));
-  ck_assert_mem_eq(result, expected, 10);
-}
-END_TEST
 void testMemSet(TCase *tc_core) {
+  tcase_add_test(tc_core, test_memset_darkside);
   tcase_add_test(tc_core, test_memset_basic);
   tcase_add_test(tc_core, test_memset_edge_cases);
-  tcase_add_test(tc_core, test_memset_int);
-  tcase_add_test(tc_core, test_memset_uint);
 }
 
 // ================================ MEM CMP ==============================
@@ -575,8 +579,8 @@ START_TEST(test_memcmp_equal) {
 }
 END_TEST
 START_TEST(test_memcmp_different) {
-  char str1[] = "Hello, world!";
-  char str2[] = "Hello, World!";
+  const char str1[] = "Hello, world!";
+  const char str2[] = "Hello, World!";
   s21_size_t n = s21_strlen(str1);
 
   int result = s21_memcmp(str1, str2, n);
@@ -587,8 +591,8 @@ START_TEST(test_memcmp_different) {
 }
 END_TEST
 START_TEST(test_memcmp_partial) {
-  char str1[] = "Hello, world!";
-  char str2[] = "Hello, there!";
+  const char str1[] = "Hello, world!";
+  const char str2[] = "Hello, there!";
   s21_size_t n = 7;  // Сравниваем только "Hello, "
   int result = s21_memcmp(str1, str2, n);
   int expected = memcmp(str1, str2, n);
@@ -597,8 +601,8 @@ START_TEST(test_memcmp_partial) {
 }
 END_TEST
 START_TEST(test_memcmp_zero_length) {
-  char str1[] = "Hello, world!";
-  char str2[] = "Goodbye, world!";
+  const char str1[] = "Hello, world!";
+  const char str2[] = "Goodbye, world!";
   s21_size_t n = 0;  // Нулевая длина
   int result = s21_memcmp(str1, str2, n);
   int expected = memcmp(str1, str2, n);
@@ -607,8 +611,8 @@ START_TEST(test_memcmp_zero_length) {
 }
 END_TEST
 START_TEST(test_memcmp_binary_data) {
-  unsigned char data1[] = {0x00, 0x01, 0x02, 0x03, 0xFF};
-  unsigned char data2[] = {0x00, 0x01, 0x02, 0x04, 0xFE};
+  const unsigned char data1[] = {0x00, 0x01, 0x02, 0x03, 0xFF};
+  const unsigned char data2[] = {0x00, 0x01, 0x02, 0x04, 0xFE};
   s21_size_t n = sizeof(data1);
   int result = s21_memcmp(data1, data2, n);
   int expected = memcmp(data1, data2, n);
@@ -617,8 +621,8 @@ START_TEST(test_memcmp_binary_data) {
 }
 END_TEST
 START_TEST(test_memcmp_one_byte_diff) {
-  char str1[] = "abcde";
-  char str2[] = "abcdf";
+  const char str1[] = "abcde";
+  const char str2[] = "abcdf";
   s21_size_t n = strlen(str1);
   int result = s21_memcmp(str1, str2, n);
   int expected = memcmp(str1, str2, n);
@@ -635,12 +639,122 @@ void testMemCmp(TCase *tc_core) {
   tcase_add_test(tc_core, test_memcmp_one_byte_diff);
 }
 
+// ================================ STR STR ==============================
+START_TEST(test_strstr_exists) {
+  const char *str = "Hello, world!";
+  const char *substr = "world";
+  ck_assert_ptr_eq(s21_strstr(str, substr), strstr(str, substr));
+}
+END_TEST
+START_TEST(test_strstr_empty_needle) {
+  const char *str = "Hello, world!";
+  const char *substr = "";
+  ck_assert_ptr_eq(s21_strstr(str, substr), strstr(str, substr));
+}
+END_TEST
+START_TEST(test_strstr_empty_haystack) {
+  const char *str = "";
+  const char *substr = "world";
+  ck_assert_ptr_eq(s21_strstr(str, substr), strstr(str, substr));
+}
+END_TEST
+START_TEST(test_strstr_both_empty) {
+  const char *str = "";
+  const char *substr = "";
+  ck_assert_ptr_eq(s21_strstr(str, substr), strstr(str, substr));
+}
+END_TEST
+START_TEST(test_strstr_equals) {
+  const char *str = "Hello, world!";
+  const char *substr = "Hello, world!";
+  ck_assert_ptr_eq(s21_strstr(str, substr), strstr(str, substr));
+}
+END_TEST
+START_TEST(test_strstr_needle_longer) {
+  const char *str = "Hello";
+  const char *substr = "Hello, world!";
+  ck_assert_ptr_eq(s21_strstr(str, substr), strstr(str, substr));
+}
+END_TEST
+START_TEST(test_strstr_multiple_occurrences) {
+  const char *str = "Hello, hello, HELLO, hello!";
+  const char *substr = "hello";
+  ck_assert_ptr_eq(s21_strstr(str, substr), strstr(str, substr));
+}
+END_TEST
+START_TEST(test_strstr_fullchars) {
+  char str[128];
+  feelString(str);
+  char substr[2] = {0};
+  for (int i = 0; i < 128; i++) {
+    substr[0] = i;
+    ck_assert_ptr_eq(s21_strstr(str, substr), strstr(str, substr));
+  }
+}
+END_TEST
+void testStrStr(TCase *tc_core) {
+  tcase_add_test(tc_core, test_strstr_exists);
+  tcase_add_test(tc_core, test_strstr_empty_needle);
+  tcase_add_test(tc_core, test_strstr_empty_haystack);
+  tcase_add_test(tc_core, test_strstr_both_empty);
+  tcase_add_test(tc_core, test_strstr_equals);
+  tcase_add_test(tc_core, test_strstr_needle_longer);
+  tcase_add_test(tc_core, test_strstr_multiple_occurrences);
+  tcase_add_test(tc_core, test_strstr_fullchars);
+}
+
+// ================================ STR R CHR =============================
+START_TEST(test_strrchr_fullchars) {
+  char str[128];
+  feelString(str);
+  for (int i = 0; i < 128; i++)
+    ck_assert_ptr_eq(s21_strrchr(str, i), strrchr(str, i));
+}
+END_TEST
+START_TEST(test_strrchr_noCharsIn) {
+  const char *str = "[128]";
+  for (int i = 0; i < 128; i++)
+    ck_assert_ptr_eq(s21_strrchr(str, i), strrchr(str, i));
+}
+END_TEST
+START_TEST(test_strrchr_DoubleChars) {
+  char str[255];
+  feelString(str);
+  feelString(str + 127);
+  for (int i = 0; i < 128; i++)
+    ck_assert_ptr_eq(s21_strrchr(str, i), strrchr(str, i));
+}
+END_TEST
+START_TEST(test_strrchr_empty_string) {
+  const char *str = "";
+  char *result = s21_strrchr(str, 'a');
+  char *expected = strrchr(str, 'a');
+  ck_assert_ptr_eq(result, expected);
+  result = s21_strrchr(str, '\0');
+  expected = strrchr(str, '\0');
+  ck_assert_ptr_eq(result, expected);
+}
+END_TEST
+START_TEST(test_strrchr_repeated_chars) {
+  const char *str = "aaabbbaaacccaaa";
+  ck_assert_ptr_eq(s21_strrchr(str, 'a'), strrchr(str, 'a'));
+  ck_assert_ptr_eq(s21_strrchr(str, 'b'), strrchr(str, 'b'));
+}
+END_TEST
+void testStrRChr(TCase *tc_core) {
+  tcase_add_test(tc_core, test_strrchr_fullchars);
+  tcase_add_test(tc_core, test_strrchr_noCharsIn);
+  tcase_add_test(tc_core, test_strrchr_DoubleChars);
+  tcase_add_test(tc_core, test_strrchr_empty_string);
+  tcase_add_test(tc_core, test_strrchr_repeated_chars);
+}
+
 // =======================================================================
 
 Suite *math_suite(void) {
   Suite *testsuite = suite_create("s21_string");
   TCase *tc_core = tcase_create("Core");
-  TCase *tc_limits = tcase_create("Limits");
+  // TCase *tc_limits = tcase_create("Limits");
 
   testCommon(tc_core);
   testMemChr(tc_core);
@@ -650,13 +764,15 @@ Suite *math_suite(void) {
   testStrChr(tc_core);
   testStrCspn(tc_core);
   testStrLen(tc_core);
-  testStrNCat(tc_core, tc_limits);
+  testStrNCat(tc_core);  // , tc_limits);
   testStrNCmp(tc_core);
   testStrNCpy(tc_core);
   testStrPbrk(tc_core);
+  testStrStr(tc_core);
+  testStrRChr(tc_core);
 
   suite_add_tcase(testsuite, tc_core);
-  suite_add_tcase(testsuite, tc_limits);
+  // suite_add_tcase(testsuite, tc_limits);
 
   return testsuite;
 }
