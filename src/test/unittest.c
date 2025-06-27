@@ -686,7 +686,7 @@ START_TEST(test_strstr_fullchars) {
   char str[128];
   feelString(str);
   char substr[2] = {0};
-  for (int i = 1; i < 128; i++) {
+  for (int i = 0; i < 128; i++) {
     substr[0] = i;
     ck_assert_ptr_eq(s21_strstr(str, substr), strstr(str, substr));
   }
@@ -701,6 +701,18 @@ void testStrStr(TCase *tc_core) {
   tcase_add_test(tc_core, test_strstr_needle_longer);
   tcase_add_test(tc_core, test_strstr_multiple_occurrences);
   tcase_add_test(tc_core, test_strstr_fullchars);
+}
+
+// ================================ STR R CHR =============================
+START_TEST(test_strrchr_fullchars) {
+  char str[128];
+  feelString(str);
+  for (int i = 0; i < 128; i++)
+    ck_assert_ptr_eq(s21_strrchr(str, i), strrchr(str, i));
+}
+END_TEST
+void testStrRChr(TCase *tc_core) {
+  tcase_add_test(tc_core, test_strrchr_fullchars);
 }
 
 // =======================================================================
@@ -723,6 +735,7 @@ Suite *math_suite(void) {
   testStrNCpy(tc_core);
   testStrPbrk(tc_core);
   testStrStr(tc_core);
+  testStrRChr(tc_core);
 
   suite_add_tcase(testsuite, tc_core);
   // suite_add_tcase(testsuite, tc_limits);

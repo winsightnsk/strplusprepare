@@ -14,5 +14,6 @@
 #include "s21_strncpy/s21_strncpy.h"
 #include "s21_strpbrk/s21_strpbrk.h"
 #include "s21_strstr/s21_strstr.h"
+#include "s21_strrchr/s21_strrchr.h"
 
 #endif
