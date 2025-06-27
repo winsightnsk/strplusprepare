@@ -1,6 +1,6 @@
 #include <check.h>
 #include <limits.h>
-//#include <signal.h>  // Добавлено для SIGSEGV
+// #include <signal.h>  // Добавлено для SIGSEGV
 #include <string.h>
 
 #include "../s21_string.h"
@@ -711,8 +711,42 @@ START_TEST(test_strrchr_fullchars) {
     ck_assert_ptr_eq(s21_strrchr(str, i), strrchr(str, i));
 }
 END_TEST
+START_TEST(test_strrchr_noCharsIn) {
+  const char *str = "[128]";
+  for (int i = 0; i < 128; i++)
+    ck_assert_ptr_eq(s21_strrchr(str, i), strrchr(str, i));
+}
+END_TEST
+START_TEST(test_strrchr_DoubleChars) {
+  char str[255];
+  feelString(str);
+  feelString(str + 127);
+  for (int i = 0; i < 128; i++)
+    ck_assert_ptr_eq(s21_strrchr(str, i), strrchr(str, i));
+}
+END_TEST
+START_TEST(test_strrchr_empty_string) {
+  const char *str = "";
+  char *result = s21_strrchr(str, 'a');
+  char *expected = strrchr(str, 'a');
+  ck_assert_ptr_eq(result, expected);
+  result = s21_strrchr(str, '\0');
+  expected = strrchr(str, '\0');
+  ck_assert_ptr_eq(result, expected);
+}
+END_TEST
+START_TEST(test_strrchr_repeated_chars) {
+  const char *str = "aaabbbaaacccaaa";
+  ck_assert_ptr_eq(s21_strrchr(str, 'a'), strrchr(str, 'a'));
+  ck_assert_ptr_eq(s21_strrchr(str, 'b'), strrchr(str, 'b'));
+}
+END_TEST
 void testStrRChr(TCase *tc_core) {
   tcase_add_test(tc_core, test_strrchr_fullchars);
+  tcase_add_test(tc_core, test_strrchr_noCharsIn);
+  tcase_add_test(tc_core, test_strrchr_DoubleChars);
+  tcase_add_test(tc_core, test_strrchr_empty_string);
+  tcase_add_test(tc_core, test_strrchr_repeated_chars);
 }
 
 // =======================================================================
