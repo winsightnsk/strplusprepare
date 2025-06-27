@@ -1,6 +1,6 @@
 #include <check.h>
 #include <limits.h>
-#include <signal.h>  // Добавлено для SIGSEGV
+//#include <signal.h>  // Добавлено для SIGSEGV
 #include <string.h>
 
 #include "../s21_string.h"
@@ -275,7 +275,7 @@ START_TEST(test_strncat_n_greater_than_src) {
   ck_assert_str_eq(dest_base, dest_s21);
 }
 END_TEST
-void testStrNCat(TCase *tc_core) { //, TCase *tc_limits) {
+void testStrNCat(TCase *tc_core) {  //, TCase *tc_limits) {
   tcase_add_test(tc_core, test_strncat_basic);
   tcase_add_test(tc_core, test_strncat_with_limit);
   tcase_add_test(tc_core, test_strncat_empty_src);
@@ -559,35 +559,10 @@ START_TEST(test_memset_edge_cases) {
   s21_memset(buffer, 'Y', 1);
   ck_assert_str_eq(buffer, "Y23456789");
 }
-// END_TEST
-// START_TEST(test_memset_int) {
-//   int result[10];
-//   int expected[10];
-//   s21_memset(result, INT_MAX, 10 * sizeof(int));
-//   memset(expected, INT_MAX, 10 * sizeof(int));
-//   ck_assert_mem_eq(result, expected, 10);
-//   s21_memset(result, INT_MIN, 5 * sizeof(int));
-//   memset(expected, INT_MIN, 5 * sizeof(int));
-//   ck_assert_mem_eq(result, expected, 10);
-// }
-// END_TEST
-// START_TEST(test_memset_uint) {
-//   unsigned int expected[10];
-//   unsigned int result[10];
-//   s21_memset(result, UINT_MAX, 10 * sizeof(unsigned int));
-//   memset(expected, UINT_MAX, 10 * sizeof(unsigned int));
-//   ck_assert_mem_eq(result, expected, 10);
-//   s21_memset(result, 0, 5 * sizeof(unsigned int));
-//   memset(expected, 0, 5 * sizeof(unsigned int));
-//   ck_assert_mem_eq(result, expected, 10);
-// }
-// END_TEST
 void testMemSet(TCase *tc_core) {
   tcase_add_test(tc_core, test_memset_darkside);
   tcase_add_test(tc_core, test_memset_basic);
   tcase_add_test(tc_core, test_memset_edge_cases);
-  // tcase_add_test(tc_core, test_memset_int);
-  // tcase_add_test(tc_core, test_memset_uint);
 }
 
 // ================================ MEM CMP ==============================
@@ -664,6 +639,70 @@ void testMemCmp(TCase *tc_core) {
   tcase_add_test(tc_core, test_memcmp_one_byte_diff);
 }
 
+// ================================ STR STR ==============================
+START_TEST(test_strstr_exists) {
+  const char *str = "Hello, world!";
+  const char *substr = "world";
+  ck_assert_ptr_eq(s21_strstr(str, substr), strstr(str, substr));
+}
+END_TEST
+START_TEST(test_strstr_empty_needle) {
+  const char *str = "Hello, world!";
+  const char *substr = "";
+  ck_assert_ptr_eq(s21_strstr(str, substr), strstr(str, substr));
+}
+END_TEST
+START_TEST(test_strstr_empty_haystack) {
+  const char *str = "";
+  const char *substr = "world";
+  ck_assert_ptr_eq(s21_strstr(str, substr), strstr(str, substr));
+}
+END_TEST
+START_TEST(test_strstr_both_empty) {
+  const char *str = "";
+  const char *substr = "";
+  ck_assert_ptr_eq(s21_strstr(str, substr), strstr(str, substr));
+}
+END_TEST
+START_TEST(test_strstr_equals) {
+  const char *str = "Hello, world!";
+  const char *substr = "Hello, world!";
+  ck_assert_ptr_eq(s21_strstr(str, substr), strstr(str, substr));
+}
+END_TEST
+START_TEST(test_strstr_needle_longer) {
+  const char *str = "Hello";
+  const char *substr = "Hello, world!";
+  ck_assert_ptr_eq(s21_strstr(str, substr), strstr(str, substr));
+}
+END_TEST
+START_TEST(test_strstr_multiple_occurrences) {
+  const char *str = "Hello, hello, HELLO, hello!";
+  const char *substr = "hello";
+  ck_assert_ptr_eq(s21_strstr(str, substr), strstr(str, substr));
+}
+END_TEST
+START_TEST(test_strstr_fullchars) {
+  char str[128];
+  feelString(str);
+  char substr[2] = {0};
+  for (int i = 1; i < 128; i++) {
+    substr[0] = i;
+    ck_assert_ptr_eq(s21_strstr(str, substr), strstr(str, substr));
+  }
+}
+END_TEST
+void testStrStr(TCase *tc_core) {
+  tcase_add_test(tc_core, test_strstr_exists);
+  tcase_add_test(tc_core, test_strstr_empty_needle);
+  tcase_add_test(tc_core, test_strstr_empty_haystack);
+  tcase_add_test(tc_core, test_strstr_both_empty);
+  tcase_add_test(tc_core, test_strstr_equals);
+  tcase_add_test(tc_core, test_strstr_needle_longer);
+  tcase_add_test(tc_core, test_strstr_multiple_occurrences);
+  tcase_add_test(tc_core, test_strstr_fullchars);
+}
+
 // =======================================================================
 
 Suite *math_suite(void) {
@@ -679,10 +718,11 @@ Suite *math_suite(void) {
   testStrChr(tc_core);
   testStrCspn(tc_core);
   testStrLen(tc_core);
-  testStrNCat(tc_core); // , tc_limits);
+  testStrNCat(tc_core);  // , tc_limits);
   testStrNCmp(tc_core);
   testStrNCpy(tc_core);
   testStrPbrk(tc_core);
+  testStrStr(tc_core);
 
   suite_add_tcase(testsuite, tc_core);
   // suite_add_tcase(testsuite, tc_limits);
