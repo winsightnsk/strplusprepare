@@ -3,8 +3,9 @@
 #include <stdio.h>
 
 char *s21_strerror(int errnum) {
-  char *res = s21_NULL;
-  printf("%s\n", ERRORS[errnum]);
-  //s21_strncpy(res, LINUX_ERRORS[errnum], s21_strlen(LINUX_ERRORS[errnum]));
+  if (errnum > ERR_SIZE) {
+    errnum = 0;
+  }
+  char *res = (char *)ERRORS[errnum];
   return res;
 }

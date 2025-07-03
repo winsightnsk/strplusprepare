@@ -2,10 +2,12 @@
 #define S21_STRERROR_H
 
 #ifdef __APPLE__
-
+#define ERRORS ((char const *[]){ \  \\ Я не знаю, где взять коды ошибок на МАК
+})
+#define ERR_SIZE 133                 \\ Я не знаю количество ошибок на МАК
 #elif __linux__
 #define ERRORS ((char const *[]){ \
-  "", \
+  "Unknown error nnn", \
   "Operation not permitted", \
   "No such file or directory", \
   "No such process", \
@@ -16,94 +18,94 @@
   "Exec format error", \
   "Bad file descriptor", \
   "No child processes", \
-EAGAIN 11 Resource temporarily unavailable
-ENOMEM 12 Cannot allocate memory
-EACCES 13 Permission denied
-EFAULT 14 Bad address
-ENOTBLK 15 Block device required
-EBUSY 16 Device or resource busy
-EEXIST 17 File exists
-EXDEV 18 Invalid cross-device link
-ENODEV 19 No such device
-ENOTDIR 20 Not a directory
-EISDIR 21 Is a directory
-EINVAL 22 Invalid argument
-ENFILE 23 Too many open files in system
-EMFILE 24 Too many open files
-ENOTTY 25 Inappropriate ioctl for device
-ETXTBSY 26 Text file busy
-EFBIG 27 File too large
-ENOSPC 28 No space left on device
-ESPIPE 29 Illegal seek
-EROFS 30 Read-only file system
-EMLINK 31 Too many links
-EPIPE 32 Broken pipe
-EDOM 33 Numerical argument out of domain
-ERANGE 34 Numerical result out of range
-EDEADLK 35 Resource deadlock avoided
-ENAMETOOLONG 36 File name too long
-ENOLCK 37 No locks available
-ENOSYS 38 Function not implemented
-ENOTEMPTY 39 Directory not empty
-ELOOP 40 Too many levels of symbolic links
-EWOULDBLOCK 11 Resource temporarily unavailable
-ENOMSG 42 No message of desired type
-EIDRM 43 Identifier removed
-ECHRNG 44 Channel number out of range
-EL2NSYNC 45 Level 2 not synchronized
-EL3HLT 46 Level 3 halted
-EL3RST 47 Level 3 reset
-ELNRNG 48 Link number out of range
-EUNATCH 49 Protocol driver not attached
-ENOCSI 50 No CSI structure available
-EL2HLT 51 Level 2 halted
-EBADE 52 Invalid exchange
-EBADR 53 Invalid request descriptor
-EXFULL 54 Exchange full
-ENOANO 55 No anode
-EBADRQC 56 Invalid request code
-EBADSLT 57 Invalid slot
-EDEADLOCK 35 Resource deadlock avoided
-EBFONT 59 Bad font file format
-ENOSTR 60 Device not a stream
-ENODATA 61 No data available
-ETIME 62 Timer expired
-ENOSR 63 Out of streams resources
-ENONET 64 Machine is not on the network
-ENOPKG 65 Package not installed
-EREMOTE 66 Object is remote
-ENOLINK 67 Link has been severed
-EADV 68 Advertise error
-ESRMNT 69 Srmount error
-ECOMM 70 Communication error on send
-EPROTO 71 Protocol error
-EMULTIHOP 72 Multihop attempted
-EDOTDOT 73 RFS specific error
-EBADMSG 74 Bad message
-EOVERFLOW 75 Value too large for defined data type
-ENOTUNIQ 76 Name not unique on network
-EBADFD 77 File descriptor in bad state
-EREMCHG 78 Remote address changed
-ELIBACC 79 Can not access a needed shared library
-ELIBBAD 80 Accessing a corrupted shared library
-ELIBSCN 81 .lib section in a.out corrupted
-ELIBMAX 82 Attempting to link in too many shared libraries
-ELIBEXEC 83 Cannot exec a shared library directly
-EILSEQ 84 Invalid or incomplete multibyte or wide character
-ERESTART 85 Interrupted system call should be restarted
-ESTRPIPE 86 Streams pipe error
-EUSERS 87 Too many users
-ENOTSOCK 88 Socket operation on non-socket
-EDESTADDRREQ 89 Destination address required
-EMSGSIZE 90 Message too long
-EPROTOTYPE 91 Protocol wrong type for socket
-ENOPROTOOPT 92 Protocol not available
-EPROTONOSUPPORT 93 Protocol not supported
-ESOCKTNOSUPPORT 94 Socket type not supported
-EOPNOTSUPP 95 Operation not supported
-EPFNOSUPPORT 96 Protocol family not supported
-EAFNOSUPPORT 97 Address family not supported by protocol
-EADDRINUSE 98 Address already in use
+  "Resource temporarily unavailable", \
+  "Cannot allocate memory", \
+  "Permission denied", \
+  "Bad address", \
+  "Block device required", \
+  "Device or resource busy", \
+  "File exists", \
+  "Invalid cross-device link", \
+  "No such device", \
+  "Not a directory", \
+  "Is a directory", \
+  "Invalid argument", \
+  "Too many open files in system", \
+  "Too many open files", \
+  "Inappropriate ioctl for device", \
+  "Text file busy", \
+  "File too large", \
+  "No space left on device", \
+  "Illegal seek", \
+  "Read-only file system", \
+  "Too many links", \
+  "Broken pipe", \
+  "Numerical argument out of domain", \
+  "Numerical result out of range", \
+  "Resource deadlock avoided", \
+  "File name too long", \
+  "No locks available", \
+  "Function not implemented", \
+  "Directory not empty", \
+  "Too many levels of symbolic links", \
+  "Resource temporarily unavailable", \
+  "No message of desired type", \
+  "Identifier removed", \
+  "Channel number out of range", \
+  "Level 2 not synchronized", \
+  "Level 3 halted", \
+  "Level 3 reset", \
+  "Link number out of range", \
+  "Protocol driver not attached", \
+  "No CSI structure available", \
+  "Level 2 halted", \
+  "Invalid exchange", \
+  "Invalid request descriptor", \
+  "Exchange full", \
+  "No anode", \
+  "Invalid request code", \
+  "Invalid slot", \
+  "Resource deadlock avoided", \
+  "Bad font file format", \
+  "Device not a stream", \
+  "No data available", \
+  "Timer expired", \
+  "Out of streams resources", \
+  "Machine is not on the network", \
+  "Package not installed", \
+  "Object is remote", \
+  "Link has been severed", \
+  "Advertise error", \
+  "Srmount error", \
+  "Communication error on send", \
+  "Protocol error", \
+  "Multihop attempted", \
+  "RFS specific error", \
+  "Bad message", \
+  "Value too large for defined data type", \
+  "Name not unique on network", \
+  "File descriptor in bad state", \
+  "Remote address changed", \
+  "Can not access a needed shared library", \
+  "Accessing a corrupted shared library", \
+  ".lib section in a.out corrupted", \
+  "Attempting to link in too many shared libraries", \
+  "Cannot exec a shared library directly", \
+  "Invalid or incomplete multibyte or wide character", \
+  "Interrupted system call should be restarted", \
+  "Streams pipe error", \
+  "Too many users", \
+  "Socket operation on non-socket", \
+  "Destination address required", \
+  "Message too long", \
+  "Protocol wrong type for socket", \
+  "Protocol not available", \
+  "Protocol not supported", \
+  "Socket type not supported", \
+  "Operation not supported", \
+  "Protocol family not supported", \
+  "Address family not supported by protocol", \
+  "Address already in use", \
   "Cannot assign requested address", \
   "Network is down", \
   "Network is unreachable", \
@@ -140,11 +142,10 @@ EADDRINUSE 98 Address already in use
   "Operation not possible due to RF-kill", \
   "Memory page has hardware error", \
 })
+#define ERR_SIZE 133
 #endif
 
 #include "../common/basetypes.h"
-#include "../s21_strncpy/s21_strncpy.h"
-#include "../s21_strlen/s21_strlen.h"
 
 char *s21_strerror(int);
 
