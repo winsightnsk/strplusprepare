@@ -13,9 +13,9 @@
 #include "s21_strncmp/s21_strncmp.h"
 #include "s21_strncpy/s21_strncpy.h"
 #include "s21_strpbrk/s21_strpbrk.h"
-#include "s21_strstr/s21_strstr.h"
 #include "s21_strrchr/s21_strrchr.h"
-// #include "s21_strtok/s21_strtok.h"
-// #include "s21_strerror/s21_strerror.h"
+#include "s21_strstr/s21_strstr.h"
+#include "s21_strtok/s21_strtok.h"
+#include "s21_strerror/s21_strerror.h"
 
 #endif

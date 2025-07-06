@@ -1,6 +1,7 @@
 #include <check.h>
 #include <limits.h>
 // #include <signal.h>  // Добавлено для SIGSEGV
+#include <stdlib.h>
 #include <string.h>
 
 #include "../s21_string.h"
@@ -58,7 +59,6 @@ START_TEST(test_strlen_hundredsixty) {
   char str[128];
   feelString(str);
   ck_assert_uint_eq(s21_strlen(str), strlen(str));
-  // free(str);
 }
 END_TEST
 void testStrLen(TCase *tc_core) {
@@ -749,6 +749,70 @@ void testStrRChr(TCase *tc_core) {
   tcase_add_test(tc_core, test_strrchr_repeated_chars);
 }
 
+// ================================ STR TOK =============================
+int compareStrTok(const char *str, const char *delim) {
+  int result = 1;
+  s21_size_t cnt = s21_strlen(str) + 1;
+  char *s21clone = malloc(cnt);
+  char *libclone = malloc(cnt);
+  strcpy(s21clone, str);
+  strcpy(libclone, str);
+
+  const char *s21_ptr = s21_strtok(s21clone, delim);
+  const char *lib_ptr = strtok(libclone, delim);
+  while (result && s21_ptr && lib_ptr) {
+    if (strcmp(s21_ptr, lib_ptr) != 0) {
+      result = 0;
+    } else {
+      s21_ptr = s21_strtok(NULL, delim);
+      lib_ptr = strtok(NULL, delim);
+    }
+  }
+  if (s21_ptr != lib_ptr) result = 0;
+  if (s21_memcmp(s21clone, libclone, cnt) != 0) result = 0;
+
+  free(s21clone);
+  free(libclone);
+  return result;
+}
+START_TEST(test_strtok_simple) {
+  ck_assert_int_eq(compareStrTok("aaa bbb", " "), 1);
+  ck_assert_int_eq(compareStrTok(" aaa bbb", " "), 1);
+  ck_assert_int_eq(compareStrTok("aaa bbb ", " "), 1);
+  ck_assert_int_eq(compareStrTok("aaabbb", " "), 1);
+  ck_assert_int_eq(compareStrTok("   a b bb", " "), 1);
+  ck_assert_int_eq(compareStrTok("aaa bbb   ", " "), 1);
+}
+END_TEST
+START_TEST(test_strtok_bigstring) {
+  char str[128];
+  feelString(str);
+  char delim[20] = {0};
+  for (int i = 0; i < 20; i++) delim[i] = (i + 1) * 5;
+  ck_assert_int_eq(compareStrTok(str, delim), 1);
+}
+END_TEST
+START_TEST(test_strtok_multiple_delimiters) {
+  const char *str = "Hello world\tthis\nis\ra\ftest";
+  ck_assert_int_eq(compareStrTok(str, " \t\n\r\f"), 1);
+}
+END_TEST
+START_TEST(test_strtok_only_delimiters) {
+  ck_assert_int_eq(compareStrTok(",,,,,", ","), 1);
+}
+END_TEST
+START_TEST(test_strtok_empty_string) {
+  ck_assert_int_eq(compareStrTok("", ","), 1);
+}
+END_TEST
+void testStrTok(TCase *tc_core) {
+  tcase_add_test(tc_core, test_strtok_simple);
+  tcase_add_test(tc_core, test_strtok_bigstring);
+  tcase_add_test(tc_core, test_strtok_multiple_delimiters);
+  tcase_add_test(tc_core, test_strtok_only_delimiters);
+  tcase_add_test(tc_core, test_strtok_empty_string);
+}
+
 // =======================================================================
 
 Suite *math_suite(void) {
@@ -770,6 +834,7 @@ Suite *math_suite(void) {
   testStrPbrk(tc_core);
   testStrStr(tc_core);
   testStrRChr(tc_core);
+  testStrTok(tc_core);
 
   suite_add_tcase(testsuite, tc_core);
   // suite_add_tcase(testsuite, tc_limits);
