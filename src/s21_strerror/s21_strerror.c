@@ -1,11 +1,12 @@
 #include "s21_strerror.h"
 
-#include <stdio.h>
-
 char *s21_strerror(int errnum) {
-  if (errnum > ERR_SIZE) {
-    errnum = 0;
+  static char message[50];
+  if (errnum > ERR_SIZE || errnum < 0) {
+    sprintf(message, "Unknows error %d", errnum);
+  } else {
+    s21_strncpy(message, ERRORS[errnum], 50);
   }
-  char *res = (char *)ERRORS[errnum];
+  char *res = message;
   return res;
 }

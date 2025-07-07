@@ -7,7 +7,7 @@
 #define ERR_SIZE 133                 \\ Я не знаю количество ошибок на МАК
 #elif __linux__
 #define ERRORS ((char const *[]){ \
-  "Unknown error nnn", \
+  "Success", \
   "Operation not permitted", \
   "No such file or directory", \
   "No such process", \
@@ -146,6 +146,10 @@
 #endif
 
 #include "../common/basetypes.h"
+#include "../s21_strncpy/s21_strncpy.h"
+
+#include <string.h>
+#include <stdio.h>
 
 char *s21_strerror(int);
 
