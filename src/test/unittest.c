@@ -1,6 +1,7 @@
 #include <check.h>
 #include <limits.h>
 // #include <signal.h>  // Добавлено для SIGSEGV
+#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -812,6 +813,33 @@ void testStrTok(TCase *tc_core) {
   tcase_add_test(tc_core, test_strtok_only_delimiters);
   tcase_add_test(tc_core, test_strtok_empty_string);
 }
+// ================================ STR ERROR=============================
+START_TEST(test_strerror) {
+  for (int i = -1; i <= 255; i++) {
+    char *result = s21_strerror(i);
+    char *expected = strerror(i);
+    ck_assert_str_eq(result, expected);
+  }
+}
+END_TEST
+START_TEST(test_known_error_codes) {
+  // Проверяем несколько стандартных кодов ошибок
+  ck_assert_str_eq(s21_strerror(EPERM), strerror(EPERM));
+  ck_assert_str_eq(s21_strerror(ENOENT), strerror(ENOENT));
+  ck_assert_str_eq(s21_strerror(ESRCH), strerror(ESRCH));
+  ck_assert_str_eq(s21_strerror(EINTR), strerror(EINTR));
+  ck_assert_str_eq(s21_strerror(EIO), strerror(EIO));
+  ck_assert_str_eq(s21_strerror(ENXIO), strerror(ENXIO));
+  ck_assert_str_eq(s21_strerror(E2BIG), strerror(E2BIG));
+  ck_assert_str_eq(s21_strerror(ENOEXEC), strerror(ENOEXEC));
+  ck_assert_str_eq(s21_strerror(EBADF), strerror(EBADF));
+  ck_assert_str_eq(s21_strerror(ECHILD), strerror(ECHILD));
+}
+END_TEST
+void testStrError(TCase *tc_core) {
+  tcase_add_test(tc_core, test_strerror);
+  tcase_add_test(tc_core, test_known_error_codes);
+}
 
 // =======================================================================
 
@@ -835,6 +863,7 @@ Suite *math_suite(void) {
   testStrStr(tc_core);
   testStrRChr(tc_core);
   testStrTok(tc_core);
+  testStrError(tc_core);
 
   suite_add_tcase(testsuite, tc_core);
   // suite_add_tcase(testsuite, tc_limits);
