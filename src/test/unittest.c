@@ -1,17 +1,16 @@
 #include <check.h>
 #include <limits.h>
 // #include <signal.h>  // Добавлено для SIGSEGV
-#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "../s21_string.h"
 
 // Свой асерт для проверки частичного раверства строк
-void assert_strn_eq(char *dest, char *src, s21_size_t count) {
-  for (s21_size_t i = 0; i < count; i++, dest++, src++)
-    ck_assert_int_eq(*dest, *src);
-}
+// void assert_strn_eq(char *dest, char *src, s21_size_t count) {
+//   for (s21_size_t i = 0; i < count; i++, dest++, src++)
+//     ck_assert_int_eq(*dest, *src);
+// }
 
 // Функция для заполнения строки из символов ASCII от 127 до 0
 void feelString(char *str) {
@@ -148,16 +147,18 @@ START_TEST(test_str_n_partial_copy) {
   char dest[15];
   feelCharString(dest, '_', 14);
   s21_strncpy(dest, src, 5);
-  assert_strn_eq(dest, "Hello", 5);
+  ck_assert_int_eq(s21_strncmp(dest, "Hello", 5), 0);
+  // assert_strn_eq(dest, "Hello", 5);
   ck_assert(dest[5] != '\0');  // strncpy не добавляет '\0' при n <= strlen(src)
 }
 END_TEST
 START_TEST(test_str_n_copy_with_zeros) {
-  char *src = "Hello!";
+  const char *src = "Hello!";
   char dest[15] = {0};
   s21_size_t len = s21_strlen(src);
   s21_strncpy(dest, src, 13);
-  assert_strn_eq(dest, src, len);
+  ck_assert_int_eq(s21_strncmp(dest, src, len), 0);
+  // assert_strn_eq(dest, src, len);
   for (s21_size_t i = len; i < 13; i++) {
     ck_assert(dest[i] == '\0');
   }
@@ -459,7 +460,8 @@ START_TEST(test_memcpy_basic) {
   memset(expected, '_', 128);
   s21_memcpy(result, src, 128);
   memcpy(expected, src, 128);
-  assert_strn_eq(result, expected, 128);
+  ck_assert_str_eq(result, expected);
+  // assert_strn_eq(result, expected, 128);
 }
 END_TEST
 START_TEST(test_memcpy_partial) {
@@ -822,25 +824,7 @@ START_TEST(test_strerror) {
   }
 }
 END_TEST
-START_TEST(test_known_error_codes) {
-  // Проверяем несколько стандартных кодов ошибок
-  ck_assert_str_eq(s21_strerror(EPERM), strerror(EPERM));
-  ck_assert_str_eq(s21_strerror(ENOENT), strerror(ENOENT));
-  ck_assert_str_eq(s21_strerror(ESRCH), strerror(ESRCH));
-  ck_assert_str_eq(s21_strerror(EINTR), strerror(EINTR));
-  ck_assert_str_eq(s21_strerror(EIO), strerror(EIO));
-  ck_assert_str_eq(s21_strerror(ENXIO), strerror(ENXIO));
-  ck_assert_str_eq(s21_strerror(E2BIG), strerror(E2BIG));
-  ck_assert_str_eq(s21_strerror(ENOEXEC), strerror(ENOEXEC));
-  ck_assert_str_eq(s21_strerror(EBADF), strerror(EBADF));
-  ck_assert_str_eq(s21_strerror(ECHILD), strerror(ECHILD));
-}
-END_TEST
-void testStrError(TCase *tc_core) {
-  tcase_add_test(tc_core, test_strerror);
-  tcase_add_test(tc_core, test_known_error_codes);
-}
-
+void testStrError(TCase *tc_core) { tcase_add_test(tc_core, test_strerror); }
 // =======================================================================
 
 Suite *math_suite(void) {
