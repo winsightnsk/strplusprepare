@@ -159,7 +159,7 @@
       "Function not implemented",                          \
       "Directory not empty",                               \
       "Too many levels of symbolic links",                 \
-      "Resource temporarily unavailable",                  \
+      "Unknown error 41",                                  \
       "No message of desired type",                        \
       "Identifier removed",                                \
       "Channel number out of range",                       \
@@ -176,7 +176,7 @@
       "No anode",                                          \
       "Invalid request code",                              \
       "Invalid slot",                                      \
-      "Resource deadlock avoided",                         \
+      "Unknown error 58",                                  \
       "Bad font file format",                              \
       "Device not a stream",                               \
       "No data available",                                 \
