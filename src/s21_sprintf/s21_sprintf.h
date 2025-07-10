@@ -1,0 +1,11 @@
+#ifndef S21_SPRINTF_H
+#define S21_SPRINTF_H
+
+#include <stdarg.h>
+
+#include "../common/basetypes.h"
+#include "spec_c.h"
+
+int s21_sprintf(char *str, char *format, ...);
+
+#endif

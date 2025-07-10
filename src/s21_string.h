@@ -17,5 +17,6 @@
 #include "s21_strstr/s21_strstr.h"
 #include "s21_strtok/s21_strtok.h"
 #include "s21_strerror/s21_strerror.h"
+#include "s21_sprintf/s21_sprintf.h"
 
 #endif

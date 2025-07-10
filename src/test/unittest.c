@@ -825,6 +825,23 @@ START_TEST(test_strerror) {
 }
 END_TEST
 void testStrError(TCase *tc_core) { tcase_add_test(tc_core, test_strerror); }
+// ================================ -+- sprintf -+- ======================
+START_TEST(test_sprintf_spec_c) {
+  char resString[128];
+  char expString[128];
+  int resNum = s21_sprintf(resString, "a, %c, c", 'b');
+  int expNum = sprintf(expString, "a, %c, c", 'b');
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "%c,%c", '_', '_');
+  expNum = sprintf(expString, "%c,%c", '_', '_');
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+}
+END_TEST
+void testSprintf(TCase *tc_core) {
+  tcase_add_test(tc_core, test_sprintf_spec_c);
+}
 // =======================================================================
 
 Suite *math_suite(void) {
@@ -848,6 +865,7 @@ Suite *math_suite(void) {
   testStrRChr(tc_core);
   testStrTok(tc_core);
   testStrError(tc_core);
+  testSprintf(tc_core);
 
   suite_add_tcase(testsuite, tc_core);
   // suite_add_tcase(testsuite, tc_limits);
