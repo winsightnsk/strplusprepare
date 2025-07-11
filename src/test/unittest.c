@@ -851,8 +851,17 @@ START_TEST(test_sprintf_spec_c) {
   ck_assert_str_eq(resString, expString);
 }
 END_TEST
+START_TEST(test_sprintf_spec_s) {
+  char resString[128];
+  char expString[128];
+  int resNum = s21_sprintf(resString, "a, %s, c", "bBb");
+  int expNum = sprintf(expString, "a, %s, c", "bBb");
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+}
 void testSprintf(TCase *tc_core) {
   tcase_add_test(tc_core, test_sprintf_spec_c);
+  tcase_add_test(tc_core, test_sprintf_spec_s);
 }
 // =======================================================================
 
