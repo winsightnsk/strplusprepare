@@ -837,6 +837,18 @@ START_TEST(test_sprintf_spec_c) {
   expNum = sprintf(expString, "%c,%c", '_', '_');
   ck_assert_int_eq(resNum, expNum);
   ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "!");
+  expNum = sprintf(expString, "!");
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "%c", '\0');
+  expNum = sprintf(expString, "%c", '\0');
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%c_", '\0');
+  expNum = sprintf(expString, "_%c_", '\0');
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
 }
 END_TEST
 void testSprintf(TCase *tc_core) {
