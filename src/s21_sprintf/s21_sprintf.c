@@ -1,18 +1,18 @@
 #include "s21_sprintf.h"
 
-int s21_sprintf(char* str, char* format, ...) {
+int s21_sprintf(char* str, const char* format, ...) {
   char* startStr = str;
-  char* ptr = format;
+  s21_size_t ptr = 0;
 
   va_list args;
   va_start(args, format);
 
-  while (*ptr) {
-    if (*ptr == '%') {
+  while (format[ptr]) {
+    if (format[ptr] == '%') {
       ptr++;
       int shiftPtr = 0;
       int shiftStr = 0;
-      switch (*ptr) {
+      switch (format[ptr]) {
         case 'c':
           specC(str, va_arg(args, int), &shiftStr, &shiftPtr);
           break;
@@ -26,7 +26,7 @@ int s21_sprintf(char* str, char* format, ...) {
       ptr += shiftPtr;
       str += shiftStr;
     } else {
-      *str = *ptr;
+      *str = format[ptr];
       str++;
     }
     ptr++;

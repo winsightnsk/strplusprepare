@@ -7,6 +7,6 @@
 #include "spec_c.h"
 #include "spec_s.h"
 
-int s21_sprintf(char *str, char *format, ...);
+int s21_sprintf(char *str, const char *format, ...);
 
 #endif
