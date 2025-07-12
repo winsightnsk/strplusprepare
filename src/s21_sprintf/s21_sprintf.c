@@ -19,6 +19,9 @@ int s21_sprintf(char* str, const char* format, ...) {
         case 's':
           specS(str, va_arg(args, char*), &shiftStr, &shiftPtr);
           break;
+        case 'f':
+          specF(str, va_arg(args, double), &shiftStr, &shiftPtr);
+          break;
 
         default:
           break;
