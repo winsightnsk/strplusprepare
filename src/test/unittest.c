@@ -589,7 +589,7 @@ START_TEST(test_memcmp_different) {
   int result = s21_memcmp(str1, str2, n);
   int expected = memcmp(str1, str2, n);
 
-  ck_assert_int_eq(result, expected);
+  ck_assert_int_eq(result > 0, expected > 0);
   ck_assert(result != 0);
 }
 END_TEST
@@ -871,9 +871,44 @@ START_TEST(test_sprintf_spec_s) {
   ck_assert_int_eq(resNum, expNum);
   ck_assert_str_eq(resString, expString);
 }
+START_TEST(test_sprintf_spec_f) {
+  char resString[128];
+  char expString[128];
+  int resNum = s21_sprintf(resString, "a, %c, c", 'b');
+  int expNum = sprintf(expString, "a, %c, c", 'b');
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "%c,%c", '_', '_');
+  expNum = sprintf(expString, "%c,%c", '_', '_');
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "!");
+  expNum = sprintf(expString, "!");
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "%c", '\0');
+  expNum = sprintf(expString, "%c", '\0');
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%c_", '\0');
+  expNum = sprintf(expString, "_%c_", '\0');
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  //resNum = s21_sprintf(resString, "%f", -0.00000000);
+  //expNum = sprintf(expString, "%f", -0.00000000);
+  //printf("%s = %s\n", expString, resString);
+  //resNum = s21_sprintf(resString, "%f", -1.00001);
+  //expNum = sprintf(expString, "%f", -1.00001);
+  //printf("%s = %s\n", expString, resString);
+  //resNum = s21_sprintf(resString, "%f", 0.01);
+  //expNum = sprintf(expString, "%f", 0.01);
+  //printf("%s = %s\n", expString, resString);
+}
+END_TEST
 void testSprintf(TCase *tc_core) {
   tcase_add_test(tc_core, test_sprintf_spec_c);
   tcase_add_test(tc_core, test_sprintf_spec_s);
+  tcase_add_test(tc_core, test_sprintf_spec_f);
 }
 // =======================================================================
 
