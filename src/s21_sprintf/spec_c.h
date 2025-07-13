@@ -3,6 +3,6 @@
 
 #include "../common/basetypes.h"
 
-void specC(char* str, char arg, int* shiftStr, int* shiftPtr);
+void specC(char* str, char arg, int* shiftStr, const int width);
 
 #endif
