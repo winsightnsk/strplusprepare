@@ -7,6 +7,7 @@
 #include "../common/basetypes.h"
 #include "format_width.h"
 #include "spec_c.h"
+#include "spec_f.h"
 #include "spec_s.h"
 
 int s21_sprintf(char *str, const char *format, ...);
