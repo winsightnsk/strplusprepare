@@ -14,14 +14,10 @@ int s21_sprintf(char* str, const char* format, ...) {
       int shiftPtr = 0;
       int shiftStr = 0;
 
-      if(isdigit(format[ptr]))
-        formatWidth(format, &ptr, &width);
+      if (isdigit(format[ptr])) formatWidth(format, &ptr, &width);
 
-
-      if (format[ptr] == 'c')
-        specC(str, va_arg(args, int), &shiftStr, width);
-      if (format[ptr] == 's')
-        specS(str, va_arg(args, char*), &shiftStr, width);
+      if (format[ptr] == 'c') specC(str, va_arg(args, int), &shiftStr, width);
+      if (format[ptr] == 's') specS(str, va_arg(args, char*), &shiftStr, width);
 
       ptr += shiftPtr;
       str += shiftStr;
