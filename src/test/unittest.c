@@ -894,15 +894,15 @@ START_TEST(test_sprintf_spec_f) {
   expNum = sprintf(expString, "_%c_", '\0');
   ck_assert_int_eq(resNum, expNum);
   ck_assert_str_eq(resString, expString);
-  //resNum = s21_sprintf(resString, "%f", -0.00000000);
-  //expNum = sprintf(expString, "%f", -0.00000000);
-  //printf("%s = %s\n", expString, resString);
-  //resNum = s21_sprintf(resString, "%f", -1.00001);
-  //expNum = sprintf(expString, "%f", -1.00001);
-  //printf("%s = %s\n", expString, resString);
-  //resNum = s21_sprintf(resString, "%f", 0.01);
-  //expNum = sprintf(expString, "%f", 0.01);
-  //printf("%s = %s\n", expString, resString);
+  // resNum = s21_sprintf(resString, "%f", -0.00000000);
+  // expNum = sprintf(expString, "%f", -0.00000000);
+  // printf("%s = %s\n", expString, resString);
+  // resNum = s21_sprintf(resString, "%f", -1.00001);
+  // expNum = sprintf(expString, "%f", -1.00001);
+  // printf("%s = %s\n", expString, resString);
+  // resNum = s21_sprintf(resString, "%f", 0.01);
+  // expNum = sprintf(expString, "%f", 0.01);
+  // printf("%s = %s\n", expString, resString);
 }
 END_TEST
 void testSprintf(TCase *tc_core) {
