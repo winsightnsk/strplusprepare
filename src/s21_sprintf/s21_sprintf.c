@@ -11,13 +11,20 @@ int s21_sprintf(char* str, const char* format, ...) {
     s21_size_t width = 0;
     if (format[ptr] == '%') {
       ptr++;
+      int alignLeft = 0;
       int shiftPtr = 0;
       int shiftStr = 0;
 
+      if (format[ptr] == '-') {
+        ptr++;
+        alignLeft = 1;
+      }
       if (isdigit(format[ptr])) formatWidth(format, &ptr, &width);
 
-      if (format[ptr] == 'c') specC(str, va_arg(args, int), &shiftStr, width);
-      if (format[ptr] == 's') specS(str, va_arg(args, char*), &shiftStr, width);
+      if (format[ptr] == 'c')
+        specC(str, va_arg(args, int), &shiftStr, width, alignLeft);
+      if (format[ptr] == 's')
+        specS(str, va_arg(args, char*), &shiftStr, width, alignLeft);
       if (format[ptr] == 'f')
         specF(str, va_arg(args, double), &shiftStr, &shiftPtr);
 
