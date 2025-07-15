@@ -3,6 +3,7 @@
 
 #include "../common/basetypes.h"
 
-void specC(char* str, char arg, int* shiftStr, const s21_size_t width);
+void specC(char* str, char arg, int* shiftStr, const s21_size_t width,
+           const int alignleft);
 
 #endif

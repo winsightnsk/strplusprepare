@@ -849,12 +849,30 @@ START_TEST(test_sprintf_spec_c) {
   expNum = sprintf(expString, "_%c_", '\0');
   ck_assert_int_eq(resNum, expNum);
   ck_assert_str_eq(resString, expString);
-  resNum = s21_sprintf(resString, "%3c", '!');
-  expNum = sprintf(expString, "%3c", '!');
+}
+END_TEST
+START_TEST(test_sprintf_spec_c_width) {
+  char resString[128];
+  char expString[128];
+  int resNum = s21_sprintf(resString, "%3c", '!');
+  int expNum = sprintf(expString, "%3c", '!');
   ck_assert_int_eq(resNum, expNum);
   ck_assert_str_eq(resString, expString);
   resNum = s21_sprintf(resString, "%23c", '!');
   expNum = sprintf(expString, "%23c", '!');
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+}
+END_TEST
+START_TEST(test_sprintf_spec_c_alignleft) {
+  char resString[128];
+  char expString[128];
+  int resNum = s21_sprintf(resString, "%-3c", '!');
+  int expNum = sprintf(expString, "%-3c", '!');
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "%-23c", '!');
+  expNum = sprintf(expString, "%-23c", '!');
   ck_assert_int_eq(resNum, expNum);
   ck_assert_str_eq(resString, expString);
 }
@@ -878,8 +896,13 @@ START_TEST(test_sprintf_spec_s) {
   expNum = sprintf(expString, "1%s2", "");
   ck_assert_int_eq(resNum, expNum);
   ck_assert_str_eq(resString, expString);
-  resNum = s21_sprintf(resString, "1%5s2", "!L");
-  expNum = sprintf(expString, "1%5s2", "!L");
+}
+END_TEST
+START_TEST(test_sprintf_spec_s_width) {
+  char resString[128];
+  char expString[128];
+  int resNum = s21_sprintf(resString, "1%5s2", "!L");
+  int expNum = sprintf(expString, "1%5s2", "!L");
   ck_assert_int_eq(resNum, expNum);
   ck_assert_str_eq(resString, expString);
   resNum = s21_sprintf(resString, "1%15s2", "?");
@@ -891,6 +914,24 @@ START_TEST(test_sprintf_spec_s) {
   ck_assert_int_eq(resNum, expNum);
   ck_assert_str_eq(resString, expString);
 }
+END_TEST
+START_TEST(test_sprintf_spec_s_alignleft) {
+  char resString[128];
+  char expString[128];
+  int resNum = s21_sprintf(resString, "1%-5s2", "!L");
+  int expNum = sprintf(expString, "1%-5s2", "!L");
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "1%-15s2", "?");
+  expNum = sprintf(expString, "1%-15s2", "?");
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "1%-3s2", "!!!!!!!!!!!!!!!!!!!!");
+  expNum = sprintf(expString, "1%-3s2", "!!!!!!!!!!!!!!!!!!!!");
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+}
+END_TEST
 START_TEST(test_sprintf_spec_f) {
   char resString[128];
   char expString[128];
@@ -927,7 +968,11 @@ START_TEST(test_sprintf_spec_f) {
 END_TEST
 void testSprintf(TCase *tc_core) {
   tcase_add_test(tc_core, test_sprintf_spec_c);
+  tcase_add_test(tc_core, test_sprintf_spec_c_width);
+  tcase_add_test(tc_core, test_sprintf_spec_c_alignleft);
   tcase_add_test(tc_core, test_sprintf_spec_s);
+  tcase_add_test(tc_core, test_sprintf_spec_s_width);
+  tcase_add_test(tc_core, test_sprintf_spec_s_alignleft);
   tcase_add_test(tc_core, test_sprintf_spec_f);
 }
 // =======================================================================
