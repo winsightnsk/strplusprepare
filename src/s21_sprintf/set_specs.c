@@ -2,21 +2,17 @@
 
 void set_specs(Spec *specs, const char *format, s21_size_t *ptr) {
   get_specs(format, ptr, specs);
-  get_wigth(format, &specs->wight, ptr);
+  get_width(format, &specs->width, ptr);
   if (*(format + *ptr) == '.') {
     specs->dot = 1;
-    ptr++;
-    get_wigth(format, &specs->accuracy, ptr);
+    *ptr += 1;
+    get_width(format, &specs->accuracy, ptr);
   }
   if (*(format + *ptr) == 'l')
-    specs->lenght = 'l';
+    specs->lenght = 1;
   else if (*(format + *ptr) == 'h')
-    specs->lenght = 'h';
-  if (specs->lenght != 0) ptr++;
-  // if (specs->wight < 0) {
-  //   specs->wight = -specs->wight;
-  //   specs->minus = 1;
-  // }
+    specs->lenght = 1;
+  if (specs->lenght != 0) *ptr += 1;
 }
 
 void get_specs(const char *format, s21_size_t *ptr, Spec *specs) {
@@ -29,19 +25,15 @@ void get_specs(const char *format, s21_size_t *ptr, Spec *specs) {
       specs->space = 1;
     else
       break;
-    ptr++;
+    *ptr += 1;
   }
   specs->space = (specs->space && !specs->plus);
 }
 
-void get_wigth(const char *format, int *wight, s21_size_t *ptr) {
-  *wight = 0;
-  while (*(format + *ptr)) {
-    if ('0' <= *(format + *ptr) && *(format + *ptr) <= '9') {
-      *wight *= 10;
-      *wight += *(format + *ptr) - '0';
-    } else
-      break;
-    ptr++;
+void get_width(const char *format, int *width, s21_size_t *ptr) {
+  *width = 0;
+  for (; isdigit(*(format + *ptr)); *ptr += 1) {
+    *width *= 10;
+    *width += *(format + *ptr) - '0';
   }
 }
