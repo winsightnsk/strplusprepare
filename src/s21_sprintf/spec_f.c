@@ -1,8 +1,7 @@
 #include "spec_f.h"
-#include <stdio.h>
 
-void specF(char *str, double arg, int *shiftStr, const s21_size_t width, s21_size_t accuracy)
-{
+void specF(char *str, double arg, int *shiftStr, const s21_size_t width,
+           s21_size_t accuracy) {
   if (accuracy == 0) {
     accuracy = 6;
   }
@@ -47,7 +46,7 @@ s21_size_t double_counter(double arg, s21_size_t accuracy) {
     even_num = -even_num;
   }
   if (even_num == 0) {
-   res += 2;
+    res += 2;
   } else {
     while (even_num > 0) {
       even_num = even_num / 10;
