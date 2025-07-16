@@ -18,19 +18,14 @@ void specF(char *str, double arg, int *shiftStr, const s21_size_t width, s21_siz
   }
   int even_part = (int)arg;
   double fractal = arg - even_part;
-  printf("%f\n", fractal);
 
   str_arg[sz - accuracy - 1] = '.';
   int p = sz - accuracy;
   for (s21_size_t i = 1; i <= accuracy; i++) {
     fractal = fractal * 10;
-    printf("fractal * 10 = %f\n", fractal);
-    str_arg[p++] = (int)fractal + '0';
-    printf("int(fractal) = %d\n", (int)fractal);
-    fractal = fractal - (int)fractal;
-    printf("fractal - (int)fractal = %f\n", fractal);
+    str_arg[p++] = (int)(fractal + 1e-9) + '0';
+    fractal = fractal - (int)(fractal + 1e-9);
   }
-  printf("итоговый fractal = %f\n", fractal);
 
   p = sz - accuracy - 2;
   int flag = 1;
