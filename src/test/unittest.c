@@ -894,35 +894,38 @@ START_TEST(test_sprintf_spec_s) {
 START_TEST(test_sprintf_spec_f) {
   char resString[128];
   char expString[128];
-  int resNum = s21_sprintf(resString, "a, %c, c", 'b');
-  int expNum = sprintf(expString, "a, %c, c", 'b');
+  int resNum = s21_sprintf(resString, "a, %f, c", 3.001);
+  int expNum = sprintf(expString, "a, %f, c", 3.001);
   ck_assert_int_eq(resNum, expNum);
   ck_assert_str_eq(resString, expString);
-  resNum = s21_sprintf(resString, "%c,%c", '_', '_');
-  expNum = sprintf(expString, "%c,%c", '_', '_');
+  resNum = s21_sprintf(resString, "%f,%f", 0.00, -2.25);
+  expNum = sprintf(expString, "%f,%f", 0.00, -2.25);
   ck_assert_int_eq(resNum, expNum);
   ck_assert_str_eq(resString, expString);
   resNum = s21_sprintf(resString, "!");
   expNum = sprintf(expString, "!");
   ck_assert_int_eq(resNum, expNum);
   ck_assert_str_eq(resString, expString);
-  resNum = s21_sprintf(resString, "%c", '\0');
-  expNum = sprintf(expString, "%c", '\0');
+  resNum = s21_sprintf(resString, "%f", 101.101);
+  expNum = sprintf(expString, "%f", 101.101);
   ck_assert_int_eq(resNum, expNum);
   ck_assert_str_eq(resString, expString);
-  resNum = s21_sprintf(resString, "_%c_", '\0');
-  expNum = sprintf(expString, "_%c_", '\0');
+  resNum = s21_sprintf(resString, "_%f_", -666.0);
+  expNum = sprintf(expString, "_%f_", -666.0);
   ck_assert_int_eq(resNum, expNum);
   ck_assert_str_eq(resString, expString);
-  // resNum = s21_sprintf(resString, "%f", -0.00000000);
-  // expNum = sprintf(expString, "%f", -0.00000000);
-  // printf("%s = %s\n", expString, resString);
-  // resNum = s21_sprintf(resString, "%f", -1.00001);
-  // expNum = sprintf(expString, "%f", -1.00001);
-  // printf("%s = %s\n", expString, resString);
-  // resNum = s21_sprintf(resString, "%f", 0.01);
-  // expNum = sprintf(expString, "%f", 0.01);
-  // printf("%s = %s\n", expString, resString);
+  resNum = s21_sprintf(resString, "%f", -0.00000000);
+  expNum = sprintf(expString, "%f", -0.00000000);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "%f", -1.00001);
+  expNum = sprintf(expString, "%f", -1.00001);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "%f", -110.01);
+  expNum = sprintf(expString, "%f", -110.01);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
 }
 END_TEST
 void testSprintf(TCase *tc_core) {
