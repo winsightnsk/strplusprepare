@@ -1,7 +1,7 @@
 #include "spec_f.h"
 
 void specF(char *str, double arg, int *shiftStr, const s21_size_t width,
-           s21_size_t accuracy) {
+           s21_size_t accuracy, const int alignleft) {
   if (accuracy == 0) {
     accuracy = 6;
   }
@@ -35,7 +35,7 @@ void specF(char *str, double arg, int *shiftStr, const s21_size_t width,
       flag = 0;
     }
   }
-  specS(str, str_arg, shiftStr, width);
+  specS(str, str_arg, shiftStr, width, alignleft);
 }
 
 s21_size_t double_counter(double arg, s21_size_t accuracy) {

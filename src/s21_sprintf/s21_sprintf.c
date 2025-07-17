@@ -26,7 +26,7 @@ int s21_sprintf(char* str, const char* format, ...) {
       if (format[ptr] == 's')
         specS(str, va_arg(args, char*), &shiftStr, width, alignLeft);
       if (format[ptr] == 'f')
-        specF(str, va_arg(args, double), &shiftStr, width, 0);
+        specF(str, va_arg(args, double), &shiftStr, width, 0, alignLeft);
 
       ptr += shiftPtr;
       str += shiftStr;
