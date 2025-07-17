@@ -2,8 +2,8 @@
 #define SPEC_C_H
 
 #include "../common/basetypes.h"
+#include "set_specs.h"
 
-void specC(char* str, char arg, int* shiftStr, const s21_size_t width,
-           const int alignleft);
+void specC(char* str, char arg, int* shiftStr, const Spec* spec);
 
 #endif

@@ -8,25 +8,18 @@ int s21_sprintf(char* str, const char* format, ...) {
   va_start(args, format);
 
   while (format[ptr]) {
-    s21_size_t width = 0;
     if (format[ptr] == '%') {
       ptr++;
-      int alignLeft = 0;
+      Spec specs = {0};
+      set_specs(&specs, format, &ptr);
       int shiftPtr = 0;
       int shiftStr = 0;
 
-      if (format[ptr] == '-') {
-        ptr++;
-        alignLeft = 1;
-      }
-      if (isdigit(format[ptr])) formatWidth(format, &ptr, &width);
-
-      if (format[ptr] == 'c')
-        specC(str, va_arg(args, int), &shiftStr, width, alignLeft);
+      if (format[ptr] == 'c') specC(str, va_arg(args, int), &shiftStr, &specs);
       if (format[ptr] == 's')
-        specS(str, va_arg(args, char*), &shiftStr, width, alignLeft);
+        specS(str, va_arg(args, char*), &shiftStr, &specs);
       if (format[ptr] == 'f')
-        specF(str, va_arg(args, double), &shiftStr, width, 0, alignLeft);
+        specF(str, va_arg(args, double), &shiftStr, &specs);
 
       ptr += shiftPtr;
       str += shiftStr;

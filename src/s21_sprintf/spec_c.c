@@ -8,10 +8,9 @@ void backspacesc(char* str, int* shiftStr, const s21_size_t width) {
     }
 }
 
-void specC(char* str, char arg, int* shiftStr, const s21_size_t width,
-           const int alignleft) {
-  if (!alignleft) backspacesc(str, shiftStr, width);
+void specC(char* str, char arg, int* shiftStr, const Spec* spec) {
+  if (!spec->minus) backspacesc(str, shiftStr, spec->width);
   *(str + *shiftStr) = arg;
   *shiftStr = *shiftStr + 1;
-  if (alignleft) backspacesc(str, shiftStr, width);
+  if (spec->minus) backspacesc(str, shiftStr, spec->width);
 }

@@ -9,14 +9,13 @@ void backspacess(char* str, const char* arg, int* shiftStr,
     }
 }
 
-void specS(char* str, char* arg, int* shiftStr, const s21_size_t width,
-           const int alignleft) {
-  if (!alignleft) backspacess(str, arg, shiftStr, width);
+void specS(char* str, char* arg, int* shiftStr, const Spec* spec) {
+  if (!spec->minus) backspacess(str, arg, shiftStr, spec->width);
   for (int i = 0; *(arg + i); i++) {
     *(str + *shiftStr) = *(arg + i);
     *shiftStr = *shiftStr + 1;
   }
-  if (alignleft) backspacess(str, arg, shiftStr, width);
+  if (spec->minus) backspacess(str, arg, shiftStr, spec->width);
 }
 
 // for (; *arg; arg++) {

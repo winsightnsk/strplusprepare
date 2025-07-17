@@ -1,11 +1,10 @@
 #include "spec_f.h"
 
-void specF(char *str, double arg, int *shiftStr, const s21_size_t width,
-           s21_size_t accuracy, const int alignleft) {
-  if (accuracy == 0) {
-    accuracy = 6;
+void specF(char *str, double arg, int *shiftStr, Spec *spec) {
+  if (spec->accuracy == 0) {
+    spec->accuracy = 6;
   }
-  s21_size_t sz = double_counter(arg, accuracy);
+  s21_size_t sz = double_counter(arg, spec->accuracy);
   char str_arg[sz + 1];
   for (s21_size_t i = 0; i < sz; i++) {
     str_arg[i] = '*';
@@ -18,15 +17,15 @@ void specF(char *str, double arg, int *shiftStr, const s21_size_t width,
   int even_part = (int)arg;
   double fractal = arg - even_part;
 
-  str_arg[sz - accuracy - 1] = '.';
-  int p = sz - accuracy;
-  for (s21_size_t i = 1; i <= accuracy; i++) {
+  str_arg[sz - spec->accuracy - 1] = '.';
+  int p = sz - spec->accuracy;
+  for (int i = 1; i <= spec->accuracy; i++) {
     fractal = fractal * 10;
     str_arg[p++] = (int)(fractal + 1e-9) + '0';
     fractal = fractal - (int)(fractal + 1e-9);
   }
 
-  p = sz - accuracy - 2;
+  p = sz - spec->accuracy - 2;
   int flag = 1;
   while (flag) {
     str_arg[p--] = even_part % 10 + '0';
@@ -35,7 +34,7 @@ void specF(char *str, double arg, int *shiftStr, const s21_size_t width,
       flag = 0;
     }
   }
-  specS(str, str_arg, shiftStr, width, alignleft);
+  specS(str, str_arg, shiftStr, spec);
 }
 
 s21_size_t double_counter(double arg, s21_size_t accuracy) {
