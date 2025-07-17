@@ -7,7 +7,7 @@ typedef struct {
   int space;     // доп символ под знак или пробел
   int width;     // ширина
   int accuracy;  // точность
-  int lenght;    // длина
+  int lng;
   int flag_to_size;  // если число отрицательное или есть + или space
   int dot;  // наличие точки, значит точности
 } Spec;

@@ -9,10 +9,10 @@ void set_specs(Spec *specs, const char *format, s21_size_t *ptr) {
     get_width(format, &specs->accuracy, ptr);
   }
   if (*(format + *ptr) == 'l')
-    specs->lenght = 1;
+    specs->lng = 1;
   else if (*(format + *ptr) == 'h')
-    specs->lenght = 1;
-  if (specs->lenght != 0) *ptr += 1;
+    specs->lng = 1;
+  if (specs->lng != 0) *ptr += 1;
 }
 
 void get_specs(const char *format, s21_size_t *ptr, Spec *specs) {

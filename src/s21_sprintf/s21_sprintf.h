@@ -3,6 +3,7 @@
 
 #include <ctype.h>
 #include <stdarg.h>
+#include <wchar.h>
 
 #include "../common/basetypes.h"
 #include "set_specs.h"

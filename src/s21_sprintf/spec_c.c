@@ -14,3 +14,10 @@ void specC(char* str, char arg, int* shiftStr, const Spec* spec) {
   *shiftStr = *shiftStr + 1;
   if (spec->minus) backspacesc(str, shiftStr, spec->width);
 }
+
+void specLC(char* str, wchar_t arg, int* shiftStr, const Spec* spec) {
+  if (!spec->minus) backspacesc(str, shiftStr, spec->width);
+  *(str + *shiftStr) = arg;
+  *shiftStr = *shiftStr + 1;
+  if (spec->minus) backspacesc(str, shiftStr, spec->width);
+}

@@ -971,7 +971,7 @@ START_TEST(test_set_specs_basic) {
   ck_assert_int_eq(specs.space, 0);  // так как space=1 только если не plus
   ck_assert_int_eq(specs.width, 10);
   ck_assert_int_eq(specs.accuracy, 5);
-  ck_assert_int_eq(specs.lenght, 1);  // так как 'l' в конце
+  ck_assert_int_eq(specs.lng, 1);  // так как 'l' в конце
   // Проверка положения указателя после вызова
   ck_assert_int_eq(ptr, strlen(format));
 }
