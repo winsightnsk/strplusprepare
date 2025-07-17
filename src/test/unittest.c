@@ -961,6 +961,22 @@ START_TEST(test_sprintf_spec_f) {
   ck_assert_str_eq(resString, expString);
 }
 END_TEST
+START_TEST(test_set_specs_basic) {
+  const char *format = "+- 10.5l";
+  s21_size_t ptr = 0;
+  Spec specs = {0};
+  set_specs(&specs, format, &ptr);
+  ck_assert_int_eq(specs.plus, 1);
+  ck_assert_int_eq(specs.minus, 1);
+  ck_assert_int_eq(specs.space, 0);  // так как space=1 только если не plus
+  ck_assert_int_eq(specs.width, 10);
+  ck_assert_int_eq(specs.accuracy, 5);
+  ck_assert_int_eq(specs.lenght, 1);  // так как 'l' в конце
+  // Проверка положения указателя после вызова
+  ck_assert_int_eq(ptr, strlen(format));
+}
+END_TEST
+
 void testSprintf(TCase *tc_core) {
   tcase_add_test(tc_core, test_sprintf_spec_c);
   tcase_add_test(tc_core, test_sprintf_spec_c_width);
@@ -969,6 +985,7 @@ void testSprintf(TCase *tc_core) {
   tcase_add_test(tc_core, test_sprintf_spec_s_width);
   tcase_add_test(tc_core, test_sprintf_spec_s_alignleft);
   tcase_add_test(tc_core, test_sprintf_spec_f);
+  tcase_add_test(tc_core, test_set_specs_basic);
 }
 // =======================================================================
 
