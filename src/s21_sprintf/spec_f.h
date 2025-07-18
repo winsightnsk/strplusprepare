@@ -6,6 +6,6 @@
 #include "spec_s.h"
 
 void specF(char* str, double arg, int* shiftStr, Spec* spec);
-s21_size_t double_counter(double arg, s21_size_t accuracy);
+s21_size_t double_counter(double arg, s21_size_t accuracy, const Spec* spec);
 
 #endif
