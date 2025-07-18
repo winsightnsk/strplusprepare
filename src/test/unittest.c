@@ -959,6 +959,35 @@ START_TEST(test_sprintf_spec_f) {
   expNum = sprintf(expString, "%4f", -110.01);
   ck_assert_int_eq(resNum, expNum);
   ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "%f", 1.999);
+  expNum = sprintf(expString, "%f", 1.999);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+}
+END_TEST
+START_TEST(test_sprintf_spec_f_space_plus) {
+  char resString[128];
+  char expString[128];
+  int resNum = s21_sprintf(resString, "a, %+f, c", 3.001);
+  int expNum = sprintf(expString, "a, %+f, c", 3.001);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_% f_", 2.25);
+  expNum = sprintf(expString, "_% f_", 2.25);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%+16f_", 2.25);
+  expNum = sprintf(expString, "_%+16f_", 2.25);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%+16f% 16f_", 1.23, 4.5);
+  expNum = sprintf(expString, "_%+16f% 16f_", 1.23, 4.5);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%-+16f_", 1.23);
+  expNum = sprintf(expString, "_%-+16f_", 1.23);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
 }
 END_TEST
 START_TEST(test_set_specs_basic) {
@@ -985,6 +1014,7 @@ void testSprintf(TCase *tc_core) {
   tcase_add_test(tc_core, test_sprintf_spec_s_width);
   tcase_add_test(tc_core, test_sprintf_spec_s_alignleft);
   tcase_add_test(tc_core, test_sprintf_spec_f);
+  tcase_add_test(tc_core, test_sprintf_spec_f_space_plus);
   tcase_add_test(tc_core, test_set_specs_basic);
 }
 // =======================================================================

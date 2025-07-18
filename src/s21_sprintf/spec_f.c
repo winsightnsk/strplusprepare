@@ -4,12 +4,14 @@ void specF(char *str, double arg, int *shiftStr, Spec *spec) {
   if (spec->accuracy == 0) {
     spec->accuracy = 6;
   }
-  s21_size_t sz = double_counter(arg, spec->accuracy);
+  s21_size_t sz = double_counter(arg, spec->accuracy, spec);
   char str_arg[sz + 1];
   for (s21_size_t i = 0; i < sz; i++) {
     str_arg[i] = '*';
   }
   str_arg[sz] = '\0';
+  if (spec->space) str_arg[0] = ' ';
+  if (spec->plus) str_arg[0] = '+';
   if (arg < 0) {
     str_arg[0] = '-';
     arg = -arg;
@@ -37,9 +39,10 @@ void specF(char *str, double arg, int *shiftStr, Spec *spec) {
   specS(str, str_arg, shiftStr, spec);
 }
 
-s21_size_t double_counter(double arg, s21_size_t accuracy) {
+s21_size_t double_counter(double arg, s21_size_t accuracy, const Spec *spec) {
   s21_size_t res = 0;
   int even_num = (int)arg;
+  if (spec->plus || spec->space) res = 1;
   if (even_num < 0) {
     res = 1;
     even_num = -even_num;
