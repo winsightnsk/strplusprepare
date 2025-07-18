@@ -984,10 +984,6 @@ START_TEST(test_sprintf_spec_f_space_plus) {
   expNum = sprintf(expString, "_%+16f% 16f_", 1.23, 4.5);
   ck_assert_int_eq(resNum, expNum);
   ck_assert_str_eq(resString, expString);
-  // resNum = s21_sprintf(resString, "%6 f,%8+f", 0.00, -2.25);
-  // expNum = sprintf(expString, "%6 f,%8+f", 0.00, -2.25);
-  // ck_assert_int_eq(resNum, expNum);
-  // ck_assert_str_eq(resString, expString);
 }
 END_TEST
 START_TEST(test_set_specs_basic) {
