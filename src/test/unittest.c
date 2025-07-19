@@ -1028,6 +1028,15 @@ START_TEST(test_insert_basic) {
   result = s21_insert(" ", "It's gone", 0);
   ck_assert_str_eq(result, "It's gone ");
   free(result);
+  result = s21_insert("hello", "world", 5);
+  ck_assert_str_eq(result, "helloworld");
+  free(result);
+  result = s21_insert("", "It's gone", 0);
+  ck_assert_str_eq(result, "It's gone");
+  free(result);
+  result = s21_insert("It's gone", "", 5);
+  ck_assert_str_eq(result, "It's gone");
+  free(result);
 }
 END_TEST
 void testInsert(TCase *tc_core) {
