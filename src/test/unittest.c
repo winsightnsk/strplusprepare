@@ -1011,6 +1011,31 @@ void testSprintf(TCase *tc_core) {
   tcase_add_test(tc_core, test_sprintf_spec_f_space_plus);
   tcase_add_test(tc_core, test_set_specs_basic);
 }
+
+// ================================ -+- insert -+- =====================
+START_TEST(test_insert_basic) {
+  char *result = s21_insert("aaabbb", " ", 3);
+  ck_assert_str_eq(result, "aaa bbb");
+  free(result);
+  result = s21_insert("I'm going home", "slowly ", 4);
+  ck_assert_str_eq(result, "I'm slowly going home");
+  free(result);
+  result = s21_insert(" ", "It's gone", 0);
+  ck_assert_str_eq(result, "It's gone ");
+  free(result);
+  result = s21_insert("hello", "world", 5);
+  ck_assert_str_eq(result, "helloworld");
+  free(result);
+  result = s21_insert("", "It's gone", 0);
+  ck_assert_str_eq(result, "It's gone");
+  free(result);
+  result = s21_insert("It's gone", "", 5);
+  ck_assert_str_eq(result, "It's gone");
+  free(result);
+}
+END_TEST
+void testInsert(TCase *tc_core) { tcase_add_test(tc_core, test_insert_basic); }
+
 // ================================ -+- to_upper -+- =====================
 START_TEST(test_to_upper_basic) {
   char *result = s21_to_upper("123abc_!ABC-z?");
@@ -1069,6 +1094,7 @@ Suite *math_suite(void) {
   testStrTok(tc_core);
   testStrError(tc_core);
   testSprintf(tc_core);
+  testInsert(tc_core);
   testToUpper(tc_core);
   testToLower(tc_core);
 
