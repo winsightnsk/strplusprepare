@@ -1039,9 +1039,7 @@ START_TEST(test_insert_basic) {
   free(result);
 }
 END_TEST
-void testInsert(TCase *tc_core) {
-  tcase_add_test(tc_core, test_insert_basic);
-}
+void testInsert(TCase *tc_core) { tcase_add_test(tc_core, test_insert_basic); }
 // =======================================================================
 
 Suite *math_suite(void) {

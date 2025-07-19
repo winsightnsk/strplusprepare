@@ -2,6 +2,7 @@
 #define S21_STRING
 
 #include "common/basetypes.h"
+#include "s21_insert/s21_insert.h"
 #include "s21_memchr/s21_memchr.h"
 #include "s21_memcmp/s21_memcmp.h"
 #include "s21_memcpy/s21_memcpy.h"
@@ -18,6 +19,5 @@
 #include "s21_strrchr/s21_strrchr.h"
 #include "s21_strstr/s21_strstr.h"
 #include "s21_strtok/s21_strtok.h"
-#include "s21_insert/s21_insert.h"
 
 #endif
