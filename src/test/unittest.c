@@ -6,12 +6,6 @@
 
 #include "../s21_string.h"
 
-// Свой асерт для проверки частичного раверства строк
-// void assert_strn_eq(char *dest, char *src, s21_size_t count) {
-//   for (s21_size_t i = 0; i < count; i++, dest++, src++)
-//     ck_assert_int_eq(*dest, *src);
-// }
-
 // Функция для заполнения строки из символов ASCII от 127 до 0
 void feelString(char *str) {
   char *pnt = str;
@@ -1017,6 +1011,40 @@ void testSprintf(TCase *tc_core) {
   tcase_add_test(tc_core, test_sprintf_spec_f_space_plus);
   tcase_add_test(tc_core, test_set_specs_basic);
 }
+// ================================ -+- to_upper -+- =====================
+START_TEST(test_to_upper_basic) {
+  char *result = s21_to_upper("123abc_!ABC-z?");
+  ck_assert_str_eq(result, "123ABC_!ABC-Z?");
+  free(result);
+  result = s21_to_upper("");
+  ck_assert_str_eq(result, "");
+  free(result);
+  result = s21_to_upper("\t\n");
+  ck_assert_str_eq(result, "\t\n");
+  free(result);
+}
+END_TEST
+void testToUpper(TCase *tc_core) {
+  tcase_add_test(tc_core, test_to_upper_basic);
+}
+
+// ================================ -+- to_lower -+- =====================
+START_TEST(test_to_lower_basic) {
+  char *result = s21_to_lower("123abc_!ABC-z?");
+  ck_assert_str_eq(result, "123abc_!abc-z?");
+  free(result);
+  result = s21_to_lower("");
+  ck_assert_str_eq(result, "");
+  free(result);
+  result = s21_to_lower("\t\n");
+  ck_assert_str_eq(result, "\t\n");
+  free(result);
+}
+END_TEST
+void testToLower(TCase *tc_core) {
+  tcase_add_test(tc_core, test_to_lower_basic);
+}
+
 // =======================================================================
 
 Suite *math_suite(void) {
@@ -1041,6 +1069,8 @@ Suite *math_suite(void) {
   testStrTok(tc_core);
   testStrError(tc_core);
   testSprintf(tc_core);
+  testToUpper(tc_core);
+  testToLower(tc_core);
 
   suite_add_tcase(testsuite, tc_core);
   // suite_add_tcase(testsuite, tc_limits);
