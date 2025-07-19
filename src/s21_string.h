@@ -18,5 +18,6 @@
 #include "s21_strrchr/s21_strrchr.h"
 #include "s21_strstr/s21_strstr.h"
 #include "s21_strtok/s21_strtok.h"
+#include "s21_trim/s21_trim.h"
 
 #endif
