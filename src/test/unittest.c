@@ -6,12 +6,6 @@
 
 #include "../s21_string.h"
 
-// Свой асерт для проверки частичного раверства строк
-// void assert_strn_eq(char *dest, char *src, s21_size_t count) {
-//   for (s21_size_t i = 0; i < count; i++, dest++, src++)
-//     ck_assert_int_eq(*dest, *src);
-// }
-
 // Функция для заполнения строки из символов ASCII от 127 до 0
 void feelString(char *str) {
   char *pnt = str;
@@ -959,6 +953,35 @@ START_TEST(test_sprintf_spec_f) {
   expNum = sprintf(expString, "%4f", -110.01);
   ck_assert_int_eq(resNum, expNum);
   ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "%f", 1.999);
+  expNum = sprintf(expString, "%f", 1.999);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+}
+END_TEST
+START_TEST(test_sprintf_spec_f_space_plus) {
+  char resString[128];
+  char expString[128];
+  int resNum = s21_sprintf(resString, "a, %+f, c", 3.001);
+  int expNum = sprintf(expString, "a, %+f, c", 3.001);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_% f_", 2.25);
+  expNum = sprintf(expString, "_% f_", 2.25);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%+16f_", 2.25);
+  expNum = sprintf(expString, "_%+16f_", 2.25);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%+16f% 16f_", 1.23, 4.5);
+  expNum = sprintf(expString, "_%+16f% 16f_", 1.23, 4.5);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%-+16f_", 1.23);
+  expNum = sprintf(expString, "_%-+16f_", 1.23);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
 }
 END_TEST
 START_TEST(test_set_specs_basic) {
@@ -976,6 +999,88 @@ START_TEST(test_set_specs_basic) {
   ck_assert_int_eq(ptr, strlen(format));
 }
 END_TEST
+START_TEST(test_sprintf_spec_d) {
+  char resString[128];
+  char expString[128];
+  short a = 1;
+  int resNum = s21_sprintf(resString, "_%d", 123);
+  int expNum = sprintf(expString, "_%d", 123);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%5d_", 123);
+  expNum = sprintf(expString, "_%5d_", 123);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%5.0d_", 123);
+  expNum = sprintf(expString, "_%5.0d_", 123);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%5.9d_", 123);
+  expNum = sprintf(expString, "_%5.9d_", 123);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%+5d_", 123);
+  expNum = sprintf(expString, "_%+5d_", 123);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%+-5d_", 123);
+  expNum = sprintf(expString, "_%+-5d_", 123);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%+5d_", -123);
+  expNum = sprintf(expString, "_%+5d_", -123);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_% 5d_", 123);
+  expNum = sprintf(expString, "_% 5d_", 123);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%-5d_", -123);
+  expNum = sprintf(expString, "_%-5d_", -123);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%-5d_", 123);
+  expNum = sprintf(expString, "_%-5d_", 123);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%ld_", 123456789L);
+  expNum = sprintf(expString, "_%ld_", 123456789L);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%hd_", a);
+  expNum = sprintf(expString, "_%hd_", a);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%d_", 0);
+  expNum = sprintf(expString, "_%d_", 0);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_% d_", 0);
+  expNum = sprintf(expString, "_% d_", 0);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%5d_", 0);
+  expNum = sprintf(expString, "_%5d_", 0);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%-5d_", 0);
+  expNum = sprintf(expString, "_%-5d_", 0);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%5.0d_", 0);
+  expNum = sprintf(expString, "_%5.0d_", 0);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%5.9d_", 0);
+  expNum = sprintf(expString, "_%5.9d_", 0);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%.0d_", 0);
+  expNum = sprintf(expString, "_%.0d_", 0);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+}
+END_TEST
 
 void testSprintf(TCase *tc_core) {
   tcase_add_test(tc_core, test_sprintf_spec_c);
@@ -985,8 +1090,69 @@ void testSprintf(TCase *tc_core) {
   tcase_add_test(tc_core, test_sprintf_spec_s_width);
   tcase_add_test(tc_core, test_sprintf_spec_s_alignleft);
   tcase_add_test(tc_core, test_sprintf_spec_f);
+  tcase_add_test(tc_core, test_sprintf_spec_f_space_plus);
   tcase_add_test(tc_core, test_set_specs_basic);
+  tcase_add_test(tc_core, test_sprintf_spec_d);
 }
+
+// ================================ -+- insert -+- =====================
+START_TEST(test_insert_basic) {
+  char *result = s21_insert("aaabbb", " ", 3);
+  ck_assert_str_eq(result, "aaa bbb");
+  free(result);
+  result = s21_insert("I'm going home", "slowly ", 4);
+  ck_assert_str_eq(result, "I'm slowly going home");
+  free(result);
+  result = s21_insert(" ", "It's gone", 0);
+  ck_assert_str_eq(result, "It's gone ");
+  free(result);
+  result = s21_insert("hello", "world", 5);
+  ck_assert_str_eq(result, "helloworld");
+  free(result);
+  result = s21_insert("", "It's gone", 0);
+  ck_assert_str_eq(result, "It's gone");
+  free(result);
+  result = s21_insert("It's gone", "", 5);
+  ck_assert_str_eq(result, "It's gone");
+  free(result);
+}
+END_TEST
+void testInsert(TCase *tc_core) { tcase_add_test(tc_core, test_insert_basic); }
+
+// ================================ -+- to_upper -+- =====================
+START_TEST(test_to_upper_basic) {
+  char *result = s21_to_upper("123abc_!ABC-z?");
+  ck_assert_str_eq(result, "123ABC_!ABC-Z?");
+  free(result);
+  result = s21_to_upper("");
+  ck_assert_str_eq(result, "");
+  free(result);
+  result = s21_to_upper("\t\n");
+  ck_assert_str_eq(result, "\t\n");
+  free(result);
+}
+END_TEST
+void testToUpper(TCase *tc_core) {
+  tcase_add_test(tc_core, test_to_upper_basic);
+}
+
+// ================================ -+- to_lower -+- =====================
+START_TEST(test_to_lower_basic) {
+  char *result = s21_to_lower("123abc_!ABC-z?");
+  ck_assert_str_eq(result, "123abc_!abc-z?");
+  free(result);
+  result = s21_to_lower("");
+  ck_assert_str_eq(result, "");
+  free(result);
+  result = s21_to_lower("\t\n");
+  ck_assert_str_eq(result, "\t\n");
+  free(result);
+}
+END_TEST
+void testToLower(TCase *tc_core) {
+  tcase_add_test(tc_core, test_to_lower_basic);
+}
+
 // =======================================================================
 
 Suite *math_suite(void) {
@@ -1011,6 +1177,9 @@ Suite *math_suite(void) {
   testStrTok(tc_core);
   testStrError(tc_core);
   testSprintf(tc_core);
+  testInsert(tc_core);
+  testToUpper(tc_core);
+  testToLower(tc_core);
 
   suite_add_tcase(testsuite, tc_core);
   // suite_add_tcase(testsuite, tc_limits);
