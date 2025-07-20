@@ -1033,7 +1033,7 @@ START_TEST(test_trim_basic) {
   free(result);
 }
 END_TEST
-void testTrim(TCase *tc_core) tcase_add_test(tc_core, test_trim_basic);
+void testTrim(TCase *tc_core) { tcase_add_test(tc_core, test_trim_basic); }
 // =======================================================================
 
 Suite *math_suite(void) {
