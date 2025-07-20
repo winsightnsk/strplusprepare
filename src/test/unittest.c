@@ -1025,7 +1025,7 @@ START_TEST(test_trim_basic) {
   result = s21_trim("111111", "1");
   ck_assert_str_eq(result, "");
   free(result);
-  result = s21_insert("", "It's gone");
+  result = s21_trim("", "It's gone");
   ck_assert_str_eq(result, "");
   free(result);
   result = s21_trim("I'm going home", "I");
@@ -1033,9 +1033,7 @@ START_TEST(test_trim_basic) {
   free(result);
 }
 END_TEST
-void testTrim(TCase *tc_core) {
-  tcase_add_test(tc_core, test_trim_basic);
-}
+void testTrim(TCase *tc_core) tcase_add_test(tc_core, test_trim_basic);
 // =======================================================================
 
 Suite *math_suite(void) {
