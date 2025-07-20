@@ -11,7 +11,7 @@ void set_specs(Spec *specs, const char *format, s21_size_t *ptr) {
   if (*(format + *ptr) == 'l')
     specs->lenght = 1;
   else if (*(format + *ptr) == 'h')
-    specs->lenght = 1;
+    specs->lenght = 2;
   if (specs->lenght != 0) *ptr += 1;
 }
 
