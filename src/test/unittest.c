@@ -1012,6 +1012,24 @@ void testSprintf(TCase *tc_core) {
   tcase_add_test(tc_core, test_set_specs_basic);
 }
 
+// ================================ -+- trim -+- =====================
+START_TEST(test_trim_basic) {
+  char *result = s21_trim("---abc---xyz----", "-");
+  ck_assert_str_eq(result, "abc---xyz");
+  free(result);
+  result = s21_trim("111111", "1");
+  ck_assert_str_eq(result, "");
+  free(result);
+  result = s21_trim("", "It's gone");
+  ck_assert_str_eq(result, "");
+  free(result);
+  result = s21_trim("I'm going home", "I");
+  ck_assert_str_eq(result, "'m going home");
+  free(result);
+}
+END_TEST
+void testTrim(TCase *tc_core) { tcase_add_test(tc_core, test_trim_basic); }
+
 // ================================ -+- insert -+- =====================
 START_TEST(test_insert_basic) {
   char *result = s21_insert("aaabbb", " ", 3);
@@ -1094,6 +1112,7 @@ Suite *math_suite(void) {
   testStrTok(tc_core);
   testStrError(tc_core);
   testSprintf(tc_core);
+  testTrim(tc_core);
   testInsert(tc_core);
   testToUpper(tc_core);
   testToLower(tc_core);
