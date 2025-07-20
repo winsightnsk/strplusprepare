@@ -999,6 +999,105 @@ START_TEST(test_set_specs_basic) {
   ck_assert_int_eq(ptr, strlen(format));
 }
 END_TEST
+START_TEST(test_sprintf_spec_d_d) {
+  char resString[128];
+  char expString[128];
+  int resNum = s21_sprintf(resString, "_%d", 123);
+  int expNum = sprintf(expString, "_%d", 123);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%5d_", 123);
+  expNum = sprintf(expString, "_%5d_", 123);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%5.0d_", 123);
+  expNum = sprintf(expString, "_%5.0d_", 123);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%5.9d_", 123);
+  expNum = sprintf(expString, "_%5.9d_", 123);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%5.9d_", -123);
+  expNum = sprintf(expString, "_%5.9d_", -123);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%+5d_", 123);
+  expNum = sprintf(expString, "_%+5d_", 123);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%+-5d_", 123);
+  expNum = sprintf(expString, "_%+-5d_", 123);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%+5d_", -123);
+  expNum = sprintf(expString, "_%+5d_", -123);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_% 5d_", 123);
+  expNum = sprintf(expString, "_% 5d_", 123);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%-5d_", -123);
+  expNum = sprintf(expString, "_%-5d_", -123);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%-5d_", 123);
+  expNum = sprintf(expString, "_%-5d_", 123);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+}
+END_TEST
+START_TEST(test_sprintf_spec_d_ld_hd_0) {
+  char resString[128];
+  char expString[128];
+  short a = 1;
+  int resNum = s21_sprintf(resString, "_%ld_", 123456789L);
+  int expNum = sprintf(expString, "_%ld_", 123456789L);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%15ld_", 123456789L);
+  expNum = sprintf(expString, "_%15ld_", 123456789L);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%hd_", a);
+  expNum = sprintf(expString, "_%hd_", a);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%5hd_", a);
+  expNum = sprintf(expString, "_%5hd_", a);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%d_", 0);
+  expNum = sprintf(expString, "_%d_", 0);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_% d_", 0);
+  expNum = sprintf(expString, "_% d_", 0);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%5d_", 0);
+  expNum = sprintf(expString, "_%5d_", 0);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%-5d_", 0);
+  expNum = sprintf(expString, "_%-5d_", 0);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%5.0d_", 0);
+  expNum = sprintf(expString, "_%5.0d_", 0);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%5.9d_", 0);
+  expNum = sprintf(expString, "_%5.9d_", 0);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "_%.0d_", 0);
+  expNum = sprintf(expString, "_%.0d_", 0);
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+}
+END_TEST
 
 void testSprintf(TCase *tc_core) {
   tcase_add_test(tc_core, test_sprintf_spec_c);
@@ -1010,6 +1109,8 @@ void testSprintf(TCase *tc_core) {
   tcase_add_test(tc_core, test_sprintf_spec_f);
   tcase_add_test(tc_core, test_sprintf_spec_f_space_plus);
   tcase_add_test(tc_core, test_set_specs_basic);
+  tcase_add_test(tc_core, test_sprintf_spec_d_d);
+  tcase_add_test(tc_core, test_sprintf_spec_d_ld_hd_0);
 }
 
 // ================================ -+- trim -+- =====================

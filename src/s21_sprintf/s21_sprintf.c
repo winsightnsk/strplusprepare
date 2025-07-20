@@ -20,6 +20,7 @@ int s21_sprintf(char* str, const char* format, ...) {
         specS(str, va_arg(args, char*), &shiftStr, &specs);
       if (format[ptr] == 'f')
         specF(str, va_arg(args, double), &shiftStr, &specs);
+      if (format[ptr] == 'd') specD(str, &specs, &args, &shiftStr);
 
       ptr += shiftPtr;
       str += shiftStr;
