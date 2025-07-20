@@ -7,6 +7,7 @@
 #include "../common/basetypes.h"
 #include "set_specs.h"
 #include "spec_c.h"
+#include "spec_d.h"
 #include "spec_f.h"
 #include "spec_s.h"
 
