@@ -12,7 +12,6 @@ clean:
 	$(foreach dir,$(FOLDERS),rm -rf $(dir)/*.c.*;)
 	rm -rf $(TEST_DIR)/*.c.*
 	rm -Rf $(TEST_DIR)/result
-	rm -f $(TEST_DIR)/$(TEST_DIR)
 	rm -f *.a
 
 clf:
