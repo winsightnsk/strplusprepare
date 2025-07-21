@@ -6,6 +6,6 @@
 #include "../common/basetypes.h"
 #include "struct.h"
 
-void specPercent(char* str, int* shiftStr, Spec *specs);
+void specPercent(char* str, int* shiftStr, Spec* specs);
 
 #endif
