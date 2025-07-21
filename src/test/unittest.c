@@ -1109,10 +1109,6 @@ START_TEST(test_sprintf_spec_percent) {
   expNum = sprintf(expString, "%5f, %%, %5s", 303.22, "YES");
   ck_assert_int_eq(resNum, expNum);
   ck_assert_str_eq(resString, expString);
-  // resNum = s21_sprintf(resString, "%5f, %5%, %5s", 303.22, "YES");
-  // expNum = sprintf(expString, "%5f, %5%, %5s", 303.22, "YES");
-  // ck_assert_int_eq(resNum, expNum);
-  // ck_assert_str_eq(resString, expString);
 }
 END_TEST
 
