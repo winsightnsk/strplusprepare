@@ -20,6 +20,7 @@ int s21_sprintf(char* str, const char* format, ...) {
       if (format[ptr] == 'f')
         specF(str, va_arg(args, double), &shiftStr, &specs);
       if (format[ptr] == 'd') specD(str, &specs, &args, &shiftStr);
+      if (format[ptr] == '%') specPercent(str, &shiftStr);
 
       str += shiftStr;
     } else {

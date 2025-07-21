@@ -1098,6 +1098,23 @@ START_TEST(test_sprintf_spec_d_ld_hd_0) {
   ck_assert_str_eq(resString, expString);
 }
 END_TEST
+START_TEST(test_sprintf_spec_percent) {
+  char resString[128];
+  char expString[128];
+  int resNum = s21_sprintf(resString, "a, %%, c");
+  int expNum = sprintf(expString, "a, %%, c");
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  resNum = s21_sprintf(resString, "%5f, %%, %5s", 303.22, "YES");
+  expNum = sprintf(expString, "%5f, %%, %5s", 303.22, "YES");
+  ck_assert_int_eq(resNum, expNum);
+  ck_assert_str_eq(resString, expString);
+  //resNum = s21_sprintf(resString, "%5f, %5%, %5s", 303.22, "YES");
+  //expNum = sprintf(expString, "%5f, %5%, %5s", 303.22, "YES");
+  //ck_assert_int_eq(resNum, expNum);
+  //ck_assert_str_eq(resString, expString);
+}
+END_TEST
 
 void testSprintf(TCase *tc_core) {
   tcase_add_test(tc_core, test_sprintf_spec_c);
@@ -1111,6 +1128,7 @@ void testSprintf(TCase *tc_core) {
   tcase_add_test(tc_core, test_set_specs_basic);
   tcase_add_test(tc_core, test_sprintf_spec_d_d);
   tcase_add_test(tc_core, test_sprintf_spec_d_ld_hd_0);
+  tcase_add_test(tc_core, test_sprintf_spec_percent);
 }
 
 // ================================ -+- trim -+- =====================

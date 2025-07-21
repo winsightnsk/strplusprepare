@@ -9,6 +9,7 @@
 #include "spec_c.h"
 #include "spec_d.h"
 #include "spec_f.h"
+#include "spec_percent.h"
 #include "spec_s.h"
 
 int s21_sprintf(char *str, const char *format, ...);
